@@ -28,7 +28,10 @@ public class User extends Account{
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(String phone) throws IOException {
+        if (!phone.matches("09-\\d{3}-\\d{3}-\\d{3}")) {
+            throw new IOException("The phone should be 11 number and example form is: 09-123-123-123.");
+        }
         this.phone = phone;
     }
 
@@ -36,7 +39,10 @@ public class User extends Account{
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(String address) throws IOException {
+        if (!address.matches("[a-zA-Z0-9-_\\s]+")) {
+            throw new IOException("The address shouldn't be blank.");
+        }
         this.address = address;
     }
 

@@ -6,20 +6,107 @@ import ir.ac.kntu.model.classes.Account;
 import ir.ac.kntu.model.classes.Manager;
 import ir.ac.kntu.model.classes.User;
 import ir.ac.kntu.model.enums.AccountType;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class SignUpMenu {
     private final Engine engine;
 
+    public SignUpMenu() {
+        this.engine = new Engine();
+    }
+
     public SignUpMenu(Engine engine) {
         this.engine = engine;
+    }
+
+    public ArrayList<Node> getNodesForSignUp() {
+        ArrayList<Node> nodes = new ArrayList<>();
+        TextField nameField = new TextField();
+        nameField.setPromptText("full name");
+        nameField.setLayoutX(173);
+        nameField.setLayoutY(100);
+        nodes.add(nameField);
+
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("username");
+        usernameField.setLayoutX(173);
+        usernameField.setLayoutY(143);
+        nodes.add(usernameField);
+
+        TextField idField = new TextField();
+        idField.setPromptText("id");
+        idField.setLayoutX(440);
+        idField.setLayoutY(100);
+        nodes.add(idField);
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("password");
+        passwordField.setLayoutX(173);
+        passwordField.setLayoutY(188);
+        nodes.add(passwordField);
+
+        Label labelName = new Label("Name");
+        labelName.setLayoutX(127);
+        labelName.setLayoutY(105);
+        nodes.add(labelName);
+
+        Label labelUsername = new Label("Username");
+        labelUsername.setLayoutX(98);
+        labelUsername.setLayoutY(148);
+        nodes.add(labelUsername);
+
+        Label labelPassword = new Label("Password");
+        labelPassword.setLayoutX(103);
+        labelPassword.setLayoutY(193);
+        nodes.add(labelPassword);
+
+        Label labelID = new Label("ID");
+        labelID.setLayoutX(416);
+        labelID.setLayoutY(105);
+        nodes.add(labelID);
+
+        Label labelError = new Label("");
+        labelError.setLayoutX(103);
+        labelError.setLayoutY(310);
+        labelError.setTextFill(Color.RED);
+        nodes.add(labelError);
+
+        Label labelType = new Label("Account's type");
+        labelType.setLayoutX(416);
+        labelType.setLayoutY(148);
+        nodes.add(labelType);
+
+        TextField addressField = new TextField();
+        addressField.setPromptText("address");
+        addressField.setLayoutX(173);
+        addressField.setLayoutY(275);
+        addressField.setPrefWidth(440);
+        nodes.add(addressField);
+
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("phone");
+        phoneField.setLayoutX(173);
+        phoneField.setLayoutY(240);
+        nodes.add(phoneField);
+
+        Label labelAddress = new Label("Address");
+        labelAddress.setLayoutX(110);
+        labelAddress.setLayoutY(280);
+        nodes.add(labelAddress);
+
+        Label labelPhone = new Label("Phone");
+        labelPhone.setLayoutX(127);
+        labelPhone.setLayoutY(243);
+        nodes.add(labelPhone);
+
+        return nodes;
     }
 
     public void getSignUpMenu() {
@@ -68,7 +155,6 @@ public class SignUpMenu {
         labelType.setLayoutX(416);
         labelType.setLayoutY(148);
 
-
         TextField addressField = new TextField();
         addressField.setPromptText("address");
         addressField.setLayoutX(173);
@@ -113,7 +199,13 @@ public class SignUpMenu {
         });
 
         createUserButton.setOnAction(Event->{
-            createUserButtonPressed(labelError,idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(),(AccountType) selectBox.getValue(),addressField.getText().trim(), phoneField.getText().trim());
+            try {
+                Account accountTemp = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(),(AccountType) selectBox.getValue());
+                createUserButtonPressed(labelError,accountTemp,addressField.getText().trim(), phoneField.getText().trim());
+            } catch (IOException e) {
+                labelError.setTextFill(Color.RED);
+                labelError.setText(e.getMessage());
+            }
         });
 
         backButton.setOnAction(Event-> {
@@ -124,18 +216,18 @@ public class SignUpMenu {
         new Main().changeScene(pane);
     }
 
-    private void createUserButtonPressed(Label labelError,String id,String name,String username,String password, AccountType accountType,String address,String phone) {
+    private void createUserButtonPressed(Label labelError,Account accountTemp,String address,String phone) {
         try {
-            if (accountType == null) {
+            if (accountTemp.getAccountType() == null) {
                 throw new IOException("The account's type shouldn't be blank.");
             }
             Account newAccount;
-            if (accountType.equals(AccountType.USER)) {
-                newAccount = new User(id,name,username,password,accountType,address,phone);
-            } else if(accountType.equals(AccountType.MANAGER)) {
-                newAccount = new Manager(id,name,username,password,accountType);
+            if (accountTemp.getAccountType().equals(AccountType.USER)) {
+                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType(),address,phone);
+            } else if(accountTemp.getAccountType().equals(AccountType.MANAGER)) {
+                newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType());
             } else {
-                newAccount = new Account(id,name,username,password,accountType);
+                newAccount = new Account(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType());
             }
             engine.getAccountService().addAccount(newAccount);
             labelError.setTextFill(Color.GREEN);

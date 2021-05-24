@@ -51,38 +51,35 @@ public class LoginMenu {
         signUpButton.setLayoutX(270);
         signUpButton.setLayoutY(300);
 
-        signInButton.setOnAction(Event->
-                {
-                    try {
-                        signInButtonPressed(usernameField.getText().trim(), passwordField.getText());
-                        labelErrors.setText("");
-                    } catch (Exception e) {
-                        labelErrors.setText(e.getMessage());
-                    }
-                }
-        );
+        signInButton.setOnAction(Event->{
+            try {
+                signInButtonPressed(usernameField.getText().trim(), passwordField.getText());
+                labelErrors.setText("");
+            } catch (Exception e) {
+                labelErrors.setText(e.getMessage());
+            }
+        });
 
         signUpButton.setOnAction(Event-> {
             SignUpMenu signUpMenu = new SignUpMenu(engine);
             signUpMenu.getSignUpMenu();
         });
 
-        Main main = new Main();
-        main.changeScene(new Pane(labelUsername,usernameField,labelPassword,passwordField,labelErrors,signInButton,signUpButton));
+        new Main().changeScene(new Pane(labelUsername,usernameField,labelPassword,passwordField,labelErrors,signInButton,signUpButton));
     }
 
     private void signInButtonPressed(String username, String password) throws Exception {
         Account currentAccount = engine.getAccountService().searchAccountByUsername(username);
         if (currentAccount != null && currentAccount.getPassword().equals(password)) {
             try {
-                AdminMenu adminMenu = new AdminMenu(currentAccount);
+                AdminMenu adminMenu = new AdminMenu(currentAccount, engine);
                 adminMenu.showMenu();
             } catch (IOException e) {
                 try {
-                    ManagerMenu managerMenu = new ManagerMenu(currentAccount);
+                    ManagerMenu managerMenu = new ManagerMenu(currentAccount, engine);
                     managerMenu.showMenu();
                 } catch (IOException c) {
-                    UserMenu userMenu = new UserMenu(currentAccount);
+                    UserMenu userMenu = new UserMenu(currentAccount, engine);
                     userMenu.showMenu();
                 }
             }

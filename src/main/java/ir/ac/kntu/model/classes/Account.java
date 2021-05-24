@@ -5,10 +5,10 @@ import ir.ac.kntu.model.enums.AccountType;
 import java.io.IOException;
 
 public class Account {
-    private final String id;
-    private final String name;
-    private final String username;
-    private final String password;
+    private String id;
+    private String name;
+    private String username;
+    private String password;
     private final AccountType accountType;
 
     public Account(String id, String name, String username, String password, AccountType accountType) throws IOException {
@@ -52,5 +52,33 @@ public class Account {
 
     public AccountType getAccountType() {
         return accountType;
+    }
+
+    public void setId(String id) throws IOException {
+        if (!name.matches("[a-zA-Z\\s]+")) {
+            throw new IOException("The name should be a-z and A-Z");
+        }
+        this.id = id;
+    }
+
+    public void setName(String name) throws IOException {
+        if (!name.matches("[a-zA-Z\\s]+")) {
+            throw new IOException("The name should be a-z and A-Z");
+        }
+        this.name = name;
+    }
+
+    public void setUsername(String username) throws IOException {
+        if (!username.matches("[a-zA-Z0-9_]+")) {
+            throw new IOException("The username should be a-z, A-Z, 0-9 and _ character");
+        }
+        this.username = username;
+    }
+
+    public void setPassword(String password) throws IOException {
+        if (!password.matches("[a-zA-Z0-9_]{4,}")) {
+            throw new IOException("The password should be a-z, A-Z, 0-9 and _ character which is at least 4 characters.");
+        }
+        this.password = password;
     }
 }
