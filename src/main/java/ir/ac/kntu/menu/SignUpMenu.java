@@ -42,11 +42,22 @@ public class SignUpMenu {
         selectBox.getItems().add(AccountType.ADMIN);
         selectBox.getItems().add(AccountType.USER);
         selectBox.getItems().add(AccountType.MANAGER);
+        Pane pane = new Pane(nameField,usernameField,idField,passwordField
+                ,labelName,labelUsername,labelPassword,labelID,labelError,selectBox,labelType);
+
+        selectBox.setOnAction(Event->{
+            if (selectBox.getValue().equals(AccountType.USER)) {
+                TextField addressField = new TextField();addressField.setPromptText("Address");addressField.setLayoutX(0);addressField.setLayoutY(0);
+                pane.getChildren().add(addressField);
+            }
+        });
 
         Button createUserButton = new Button("Create User"); createUserButton.setLayoutX(510); createUserButton.setLayoutY(300);
 
         Button backButton = new Button("Back"); backButton.setLayoutX(440); backButton.setLayoutY(300);
 
+        pane.getChildren().add(backButton);
+        pane.getChildren().add(createUserButton);
         createUserButton.setOnAction(Event->{
             try {
                 Account newAccount = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),
@@ -63,8 +74,6 @@ public class SignUpMenu {
             loginMenu.getLoginPain();
         });
 
-        main.changeScene(new Pane(nameField,usernameField,idField,passwordField
-                                    ,labelName,labelUsername,labelPassword,labelID,labelError,selectBox,labelType
-                                    ,backButton,createUserButton));
+        main.changeScene(pane);
     }
 }
