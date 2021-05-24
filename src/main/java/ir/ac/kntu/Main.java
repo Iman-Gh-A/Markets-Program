@@ -23,10 +23,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
+        stage.setResizable(false);
         Engine engine = new Engine();
         createFakeObject(engine);
         LoginMenu loginMenu = new LoginMenu(engine);
-        Button startButton = new Button("Start"); startButton.setLayoutX(335); startButton.setLayoutY(235);
+
+        Button startButton = new Button("Start");
+        startButton.setLayoutX(335);
+        startButton.setLayoutY(235);
+
         startButton.setOnAction(Event-> loginMenu.getLoginPain());
         Scene scene = new Scene(new Pane(startButton),700,500);
         stage.setScene(scene);

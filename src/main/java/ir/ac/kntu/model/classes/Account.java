@@ -13,19 +13,19 @@ public class Account {
 
     public Account(String id, String name, String username, String password, AccountType accountType) throws IOException {
         if (!name.matches("[a-zA-Z\\s]+")) {
-            throw new IOException("the name should be a-z and A-Z");
+            throw new IOException("The name should be a-z and A-Z");
         }
         if (!id.matches("\\d{10}")) {
-            throw new IOException("the ID should be 10 number");
+            throw new IOException("The ID should be 10 number");
         }
         if (!username.matches("[a-zA-Z0-9_]+")) {
-            throw new IOException("the username should be a-z, A-Z, 0-9 and _ character");
+            throw new IOException("The username should be a-z, A-Z, 0-9 and _ character");
         }
         if (!password.matches("[a-zA-Z0-9_]{4,}")) {
-            throw new IOException("the password should be a-z, A-Z, 0-9 and _ character which is at least 4 characters.");
+            throw new IOException("The password should be a-z, A-Z, 0-9 and _ character which is at least 4 characters.");
         }
         if (accountType == null) {
-            throw new IOException("the account's type shouldn't be blank.");
+            throw new IOException("The account's type shouldn't be blank.");
         }
         this.id = id;
         this.name = name;
