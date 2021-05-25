@@ -44,7 +44,7 @@ public class Main extends Application {
         stage.getScene().setRoot(newPane);
     }
 
-    private void createFakeObject(Engine engine) throws IOException {
+    private void createFakeObject(Engine engine) {
         Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh", AccountType.USER,"Iran-Tehran","09-207-410-787");
         Account adminTemp1 = new Account("2222222222","Admin", "admin", "admin", AccountType.ADMIN);
         Account managerTemp1 = new Manager("3333333333","Ali Emami Manager", "ali", "alie", AccountType.MANAGER);

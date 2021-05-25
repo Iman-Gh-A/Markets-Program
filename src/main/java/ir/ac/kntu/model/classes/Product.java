@@ -1,6 +1,6 @@
 package ir.ac.kntu.model.classes;
 
-public class Market {
+public class Product {
     private String name;
 
     public String getName() {

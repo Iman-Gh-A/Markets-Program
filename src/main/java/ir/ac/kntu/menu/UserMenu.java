@@ -6,14 +6,11 @@ import ir.ac.kntu.model.classes.Account;
 import ir.ac.kntu.model.classes.User;
 import ir.ac.kntu.model.enums.AccountType;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
+import java.lang.IllegalArgumentException;
 
 
 public class UserMenu {
@@ -34,14 +31,23 @@ public class UserMenu {
         borderPane.setPrefHeight(500);
         borderPane.setCenter(showProfileAndEdit());
         Label labelName = new Label("\t"+account.getName()+"\t");
+        Button orderingButton = new Button("Ordering");
+        orderingButton.setPrefWidth(120);
+        Button historyButton = new Button("Order history");
+        historyButton.setPrefWidth(120);
         Button exitButton = new Button("Exit");
-        exitButton.setPrefWidth(100);
-        VBox leftVBox = new VBox(labelName,exitButton);
+        exitButton.setPrefWidth(120);
+        VBox leftVBox = new VBox(labelName,orderingButton,historyButton,exitButton);
         leftVBox.setSpacing(10);
         leftVBox.setAlignment(Pos.CENTER);
-        leftVBox.setSpacing(5);
         borderPane.setLeft(leftVBox);
 
+        orderingButton.setOnAction(Event-> {
+            borderPane.setCenter(showOrderingMenu());
+        });
+        historyButton.setOnAction(Event ->{
+            borderPane.setCenter(showOrderHistoryMenu());
+        });
 
         exitButton.setOnAction(Event-> {
             new LoginMenu(engine).getLoginPain(); });
@@ -94,12 +100,12 @@ public class UserMenu {
         return borderPane;
     }
 
-    private void updateUser(User user,String password) throws IOException {
+    private void updateUser(User user,String password) {
         if (engine.getAccountService().searchAccountByID(user.getId()) != account && engine.getAccountService().searchAccountByID(user.getId()) != null) {
-            throw new IOException("The ID has already been used.");
+            throw new IllegalArgumentException("The ID has already been used.");
         }
         if (engine.getAccountService().searchAccountByUsername(user.getUsername()) != account && engine.getAccountService().searchAccountByUsername(user.getUsername()) != null) {
-            throw new IOException("The username has already been used.");
+            throw new IllegalArgumentException("The username has already been used.");
         }
         account.setName(user.getName());
         account.setId(user.getId());
@@ -109,5 +115,35 @@ public class UserMenu {
         if (!password.equals("")) {
             account.setPassword(password);
         }
+    }
+
+    private Pane showOrderingMenu() {
+        BorderPane borderPane = new BorderPane();
+        TabPane tabPane = new TabPane();
+        Tab restaurantTab = new Tab("Restaurants");
+        restaurantTab.setClosable(false);
+        Tab superTab = new Tab("Super Markets");
+        superTab.setClosable(false);
+        Tab shopTab = new Tab("Fruit Shop");
+        shopTab.setClosable(false);
+        tabPane.getTabs().addAll(restaurantTab,superTab,shopTab);
+        borderPane.setCenter(tabPane);
+
+
+
+        return borderPane;
+    }
+
+    private Pane showOrderHistoryMenu() {
+        BorderPane borderPane = new BorderPane();
+        ListView listView = new ListView();
+        listView.getItems().add("Order History");
+        if (account.getOrders().size() == 0) {
+            listView.getItems().add("Nothing");
+        } else {
+            listView.getItems().addAll(account.getOrders());
+        }
+        borderPane.setCenter(listView);
+        return borderPane;
     }
 }
