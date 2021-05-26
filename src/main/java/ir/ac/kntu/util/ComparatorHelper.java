@@ -1,7 +1,7 @@
 package ir.ac.kntu.util;
 
-import ir.ac.kntu.model.classes.Food;
-import ir.ac.kntu.model.classes.Restaurant;
+import ir.ac.kntu.model.classes.products.Food;
+import ir.ac.kntu.model.classes.markets.Restaurant;
 
 import java.util.Comparator;
 import java.util.Map;

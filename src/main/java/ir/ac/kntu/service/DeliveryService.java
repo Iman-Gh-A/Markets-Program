@@ -1,6 +1,6 @@
 package ir.ac.kntu.service;
 
-import ir.ac.kntu.model.classes.Delivery;
+import ir.ac.kntu.model.classes.persons.Delivery;
 
 import java.util.ArrayList;
 

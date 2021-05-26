@@ -2,7 +2,7 @@ package ir.ac.kntu.menu;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
-import ir.ac.kntu.model.classes.Account;
+import ir.ac.kntu.model.classes.persons.Account;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;

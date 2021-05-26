@@ -2,15 +2,23 @@ package ir.ac.kntu.menu;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
-import ir.ac.kntu.model.classes.Account;
-import ir.ac.kntu.model.classes.User;
+import ir.ac.kntu.model.classes.Comment;
+import ir.ac.kntu.model.classes.Order;
+import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.markets.Market;
+import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
+import ir.ac.kntu.model.enums.MarketType;
+import ir.ac.kntu.model.enums.OrderStatus;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.lang.IllegalArgumentException;
+import java.util.ArrayList;
 
 
 public class UserMenu {
@@ -31,17 +39,22 @@ public class UserMenu {
         borderPane.setPrefHeight(500);
         borderPane.setCenter(showProfileAndEdit());
         Label labelName = new Label("\t"+account.getName()+"\t");
+        Button profileButton = new Button("Profile");
+        profileButton.setPrefWidth(120);
         Button orderingButton = new Button("Ordering");
         orderingButton.setPrefWidth(120);
         Button historyButton = new Button("Order history");
         historyButton.setPrefWidth(120);
         Button exitButton = new Button("Exit");
         exitButton.setPrefWidth(120);
-        VBox leftVBox = new VBox(labelName,orderingButton,historyButton,exitButton);
+        VBox leftVBox = new VBox(labelName,profileButton,orderingButton,historyButton,exitButton);
         leftVBox.setSpacing(10);
         leftVBox.setAlignment(Pos.CENTER);
         borderPane.setLeft(leftVBox);
 
+        profileButton.setOnAction(Event-> {
+            borderPane.setCenter(showProfileAndEdit());
+        });
         orderingButton.setOnAction(Event-> {
             borderPane.setCenter(showOrderingMenu());
         });
@@ -128,6 +141,7 @@ public class UserMenu {
         shopTab.setClosable(false);
         tabPane.getTabs().addAll(restaurantTab,superTab,shopTab);
         borderPane.setCenter(tabPane);
+        restaurantTab.setContent(showMarketsForOrdering(MarketType.RESTAURANT));
 
 
 
@@ -137,13 +151,91 @@ public class UserMenu {
     private Pane showOrderHistoryMenu() {
         BorderPane borderPane = new BorderPane();
         ListView listView = new ListView();
-        listView.getItems().add("Order History");
-        if (account.getOrders().size() == 0) {
-            listView.getItems().add("Nothing");
-        } else {
-            listView.getItems().addAll(account.getOrders());
-        }
-        borderPane.setCenter(listView);
+        listView.setPrefHeight(200);
+        VBox topVBox = new VBox(new Label("Order History"));
+        listView.getItems().addAll(account.getOrders());
+        listView.setPlaceholder(new Label("Nothing"));
+        topVBox.getChildren().add(listView);
+        borderPane.setTop(topVBox);
+        VBox bottomVBox = new VBox();
+        ChoiceBox selectRate = new ChoiceBox();
+        selectRate.getItems().addAll(1,2,3,4,5,6,7,8,9,10);
+        TextArea commentArea = new TextArea();
+        commentArea.setPromptText("Write your comment related about selected order");
+        Button commentingButton = new Button("Commenting");
+        Label alertLabel = new Label("");
+        borderPane.setBottom(new VBox(new HBox(new Label("Rate"),selectRate,alertLabel),commentArea,commentingButton));
+        commentingButton.setOnAction(Event-> {
+            ObservableList<Order> temp = listView.getSelectionModel().getSelectedItems();
+            try {
+                if (temp.size() != 0) {
+                    Order order = temp.get(0);
+                    if (selectRate.getValue() == null ) {
+                        throw new IllegalArgumentException("the rate box shouldn't be blank.");
+                    }
+                    if (!order.getStatus().equals(OrderStatus.DELIVERED)) {
+                        throw new IllegalArgumentException("this order doesn't delivered.");
+                    }
+                    order.addComment(new Comment(commentArea.getText().trim(), account, (Integer) selectRate.getValue(), order.getMarket(), order.getProducts()));
+                    alertLabel.setTextFill(Color.GREEN);
+                    alertLabel.setText("Successfully Commenting");
+                }
+            } catch (Exception e) {
+                alertLabel.setTextFill(Color.RED);
+                alertLabel.setText(e.getMessage());
+            }
+
+        });
+        return borderPane;
+    }
+
+    private Pane showMarketsForOrdering(MarketType marketType) {
+        ArrayList<Market> relatedMarkets = engine.getMarketService().getListOfMarketByType(marketType,"");
+        BorderPane borderPane = new BorderPane();
+        BorderPane innerBorderPane = new BorderPane();
+        Button searchButton = new Button("Search");
+        TextField searchField = new TextField("");
+        searchField.setPromptText("Market's name");
+        innerBorderPane.setTop(new HBox(searchField,searchButton));
+        TableView tableView = new TableView();
+        tableView.setPlaceholder(new Label("Nothing"));
+        TableColumn<Market,String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Market,String> typeColumn = new TableColumn<>("Type");
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        TableColumn<Market,String> rateColumn = new TableColumn<>("Rate");
+        rateColumn.setCellValueFactory(new PropertyValueFactory<>("rate"));
+        TableColumn<Market,String> commentNumColumn = new TableColumn<>("Comment Number");
+        commentNumColumn.setCellValueFactory(new PropertyValueFactory<>("commentsNum"));
+
+        tableView.getColumns().addAll(nameColumn,typeColumn,rateColumn,commentNumColumn);
+        tableView.getItems().addAll(relatedMarkets);
+
+        Button nextButton = new Button("Next");
+        innerBorderPane.setCenter(tableView);
+        innerBorderPane.setBottom(nextButton);
+        Button backButton = new Button("Back");
+        BorderPane borderPane2 = new BorderPane();
+        borderPane2.setCenter(innerBorderPane);
+        VBox vBox = new VBox(borderPane2,backButton);
+        borderPane.setCenter(vBox);
+
+        nextButton.setOnAction(Event-> {
+            ObservableList<Market> temp = tableView.getSelectionModel().getSelectedItems();
+            if (temp.size() != 0) {
+                Market selectedMarket = temp.get(0);
+                ProductsMenu productsMenu = new ProductsMenu(engine, account, selectedMarket);
+                borderPane2.setCenter(productsMenu.showProductsOfMarketMenu());
+            }
+        });
+        backButton.setOnAction(Event-> {
+            borderPane2.setCenter(innerBorderPane);
+        });
+        searchButton.setOnAction(Event-> {
+            ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
+            tableView.getItems().clear();
+            tableView.getItems().addAll(searchedMarkets);
+        });
         return borderPane;
     }
 }

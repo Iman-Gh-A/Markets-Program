@@ -1,6 +1,6 @@
 package ir.ac.kntu.service;
 
-import ir.ac.kntu.model.classes.Account;
+import ir.ac.kntu.model.classes.persons.Account;
 
 import java.util.ArrayList;
 

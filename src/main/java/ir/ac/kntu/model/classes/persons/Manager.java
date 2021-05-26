@@ -1,5 +1,6 @@
-package ir.ac.kntu.model.classes;
+package ir.ac.kntu.model.classes.persons;
 
+import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.enums.AccountType;
 
 import java.util.ArrayList;

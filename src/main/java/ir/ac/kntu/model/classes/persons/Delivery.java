@@ -1,5 +1,7 @@
-package ir.ac.kntu.model.classes;
+package ir.ac.kntu.model.classes.persons;
 
+import ir.ac.kntu.model.classes.markets.Market;
+import ir.ac.kntu.model.classes.Order;
 import ir.ac.kntu.model.enums.OrderStatus;
 import ir.ac.kntu.model.enums.SalaryType;
 import ir.ac.kntu.model.enums.VehicleType;
@@ -7,7 +9,7 @@ import ir.ac.kntu.model.enums.VehicleType;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Delivery extends Person{
+public class Delivery extends Person {
     private VehicleType vehicleType;
     private SalaryType salaryType;
     private Double baseSalary;

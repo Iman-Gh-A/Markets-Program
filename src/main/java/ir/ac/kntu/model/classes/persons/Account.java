@@ -1,10 +1,10 @@
-package ir.ac.kntu.model.classes;
+package ir.ac.kntu.model.classes.persons;
 
 import ir.ac.kntu.model.enums.AccountType;
 
 import java.lang.IllegalArgumentException;
 
-public class Account extends Person{
+public class Account extends Person {
     private String username;
     private String password;
     private final AccountType accountType;

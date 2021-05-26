@@ -11,6 +11,11 @@ public class OrderService {
         orders = new ArrayList<>();
     }
 
+    public void addOrder(Order newOrder) {
+        orders.add(newOrder);
+        newOrder.getUser().addOrder(newOrder);
+    }
+
     public ArrayList<Order> getOrders() {
         return (ArrayList<Order>) orders.clone();
     }

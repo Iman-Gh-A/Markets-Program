@@ -1,5 +1,10 @@
 package ir.ac.kntu.model.classes;
 
+import ir.ac.kntu.model.classes.markets.Market;
+import ir.ac.kntu.model.classes.persons.User;
+import ir.ac.kntu.model.classes.products.Product;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Comment {
@@ -7,17 +12,14 @@ public class Comment {
     private final User commentingUser;
     private final Integer rate;
     private final Market market;
-    private final Product product;
+    private final ArrayList<Product> products;
 
-    public Comment(String textComment, User commentingUser, String rate, Market market, Product product) {
+    public Comment(String textComment, User commentingUser, Integer rate, Market market, ArrayList<Product> products) {
         this.market = market;
-        this.product = product;
-        if ( !rate.matches("[012345]") ) {
-            throw new IllegalArgumentException("\tError: The rate should be 0, 1, 2, 3, 4 or 5.");
-        }
+        this.products = products;
         this.textComment = textComment;
         this.commentingUser = commentingUser;
-        this.rate = Integer.parseInt(rate);
+        this.rate = rate;
 
     }
 
@@ -29,6 +31,9 @@ public class Comment {
         return rate;
     }
 
+    public ArrayList<Product> getProducts() {
+        return (ArrayList<Product>) products.clone();
+    }
 //    @Override
 //    public String toString() {
 //        return  "Commenting User=" + commentingUser.getUsername() +
@@ -54,10 +59,6 @@ public class Comment {
     @Override
     public int hashCode() {
         return Objects.hash(textComment, commentingUser, rate);
-    }
-
-    public Product getProduct() {
-        return product;
     }
 
     public Market getMarket() {

@@ -1,15 +1,19 @@
-package ir.ac.kntu.model.classes;
+package ir.ac.kntu.model.classes.persons;
 
+import ir.ac.kntu.model.classes.Comment;
+import ir.ac.kntu.model.classes.Order;
+import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.enums.AccountType;
 
 import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
 
-public class User extends Account{
+public class User extends Account {
 
     private String address;
     private String phone;
     private final ArrayList<Order> orders;
+    private final ArrayList<Comment> comments;
 
     public User(String id, String name, String username, String password, AccountType accountType, String address, String phone) {
         super(id, name, username, password, accountType);
@@ -22,6 +26,7 @@ public class User extends Account{
         this.address = address;
         this.phone = phone;
         orders = new ArrayList<>();
+        comments = new ArrayList<>();
     }
 
     public String getPhone() {
@@ -52,5 +57,9 @@ public class User extends Account{
 
     public void addOrder(Order newOrder) {
         orders.add(newOrder);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 }

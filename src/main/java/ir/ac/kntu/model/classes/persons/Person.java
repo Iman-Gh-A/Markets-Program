@@ -1,4 +1,4 @@
-package ir.ac.kntu.model.classes;
+package ir.ac.kntu.model.classes.persons;
 
 import java.lang.IllegalArgumentException;
 
