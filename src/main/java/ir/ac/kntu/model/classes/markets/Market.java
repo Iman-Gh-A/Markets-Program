@@ -5,6 +5,8 @@ import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.MarketType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Market {
@@ -16,6 +18,7 @@ public class Market {
     private final ArrayList<Comment> comments;
     private int commentsNum;
     private boolean status;
+    private ArrayList<Map.Entry<String,Integer>> schedule;
 
     public Market(String name, String address, MarketType marketType) {
         this.name = name;
@@ -127,5 +130,13 @@ public class Market {
 
     public int getCommentsNum() {
         return commentsNum;
+    }
+
+    public ArrayList<Map.Entry<String, Integer>> getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(ArrayList<Map.Entry<String, Integer>> schedule) {
+        this.schedule = schedule;
     }
 }

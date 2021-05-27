@@ -70,7 +70,7 @@ public class Order {
         for (Product currentProduct : products) {
             result += currentProduct.getName() + ", ";
         }
-        return result+"\b";
+        return result;
     }
 
     public ArrayList<Product> getProducts() {

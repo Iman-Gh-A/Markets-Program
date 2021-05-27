@@ -34,15 +34,13 @@ public class Comment {
     public ArrayList<Product> getProducts() {
         return (ArrayList<Product>) products.clone();
     }
-//    @Override
-//    public String toString() {
-//        return  "Commenting User=" + commentingUser.getUsername() +
-//                "  Comment for" +
-//                " " + product.getName() +
-//                " from " + market.getName() +
-//                ": " + textComment +
-//                "  rate=" + rate + "\n";
-//    }
+
+    @Override
+    public String toString() {
+        return  "User: " + commentingUser.getUsername() +
+                " |Comment: " + textComment +
+                "  (rate:)" + rate + "\n";
+    }
 
     @Override
     public boolean equals(Object o) {

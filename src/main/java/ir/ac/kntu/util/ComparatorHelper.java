@@ -35,10 +35,15 @@ public class ComparatorHelper {
 
     private static final Comparator<Map.Entry<Restaurant,Double>> RATE_OF_FOOD_DIFFERENT_RESTAURANTS = (restaurantIntegerEntry, t1) -> t1.getValue().compareTo(restaurantIntegerEntry.getValue());
 
+    private static final Comparator<Map.Entry<String,Integer>> SCHEDULE = Comparator.comparing(Map.Entry::getKey);
+
     public static Comparator<Map.Entry<Restaurant, Double>> rateOfFoodDifferentRestaurantsComparator() {
         return RATE_OF_FOOD_DIFFERENT_RESTAURANTS;
     }
 
+    public static Comparator<Map.Entry<String,Integer>> schedule() {
+        return SCHEDULE;
+    }
     public static Comparator<Restaurant> rateRestaurantComparator() {
         return RESTAURANT_RATE;
     }

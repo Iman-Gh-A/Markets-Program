@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Restaurant extends Market {
     private RestaurantType type;
     private String workHour;
-    public Restaurant(String name, String address, MarketType marketType, boolean status, RestaurantType type, String workHour) {
+    public Restaurant(String name, String address, RestaurantType type, String workHour) {
         super(name, address, MarketType.RESTAURANT);
         this.type = type;
         this.workHour = workHour;

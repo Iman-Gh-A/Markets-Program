@@ -1,6 +1,7 @@
 package ir.ac.kntu.model.classes.products;
 
 import ir.ac.kntu.model.classes.Comment;
+import ir.ac.kntu.model.enums.AvailabilityOfProduct;
 import ir.ac.kntu.model.enums.ProductType;
 
 import java.util.ArrayList;
@@ -55,7 +56,14 @@ public class Product {
         return commentsNum;
     }
 
+    public int getAvailabilityInt() {
+        return Integer.parseInt(availability);
+    }
+
     public String getAvailability() {
+        if (availability.equals("0")) {
+            return AvailabilityOfProduct.ENDED.toString().toLowerCase();
+        }
         return availability;
     }
 
