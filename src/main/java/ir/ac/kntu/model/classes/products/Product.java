@@ -9,13 +9,13 @@ import java.util.ArrayList;
 public class Product {
     private final String name;
     private final Double cost;
-    private String availability;
+    private int availability;
     private Double rate;
     private final ArrayList<Comment> comments;
     private int commentsNum;
     private final ProductType productType;
 
-    public Product(String name, Double cost, String availability, ProductType productType) {
+    public Product(String name, Double cost, int availability, ProductType productType) {
         this.name = name;
         this.cost = cost;
         this.availability = availability;
@@ -57,21 +57,29 @@ public class Product {
     }
 
     public int getAvailabilityInt() {
-        return Integer.parseInt(availability);
+        return availability;
     }
 
     public String getAvailability() {
-        if (availability.equals("0")) {
+        if (availability < 0) {
+            return AvailabilityOfProduct.UNLIMITED.toString().toLowerCase();
+        }
+        if (availability == 0) {
             return AvailabilityOfProduct.ENDED.toString().toLowerCase();
         }
-        return availability;
+        return "" + availability;
+    }
+
+    public double orderThisProduct(int number) {
+        setAvailability(getAvailabilityInt() - number );
+        return getCost()*number;
     }
 
     public ProductType getProductType() {
         return productType;
     }
 
-    public void setAvailability(String availability) {
+    public void setAvailability(int availability) {
         this.availability = availability;
     }
 }

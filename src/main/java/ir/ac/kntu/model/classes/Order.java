@@ -14,23 +14,26 @@ public class Order {
     private final User user;
     private final Market market;
     private final ArrayList<Product> products;
-    private final Double cost;
+    private final int[] counter;
+    private Double cost;
     private Comment comment;
     private Delivery delivery;
     private OrderStatus status;
 
-    public Order(User user, Market market, ArrayList<Product> products) {
+    public Order(User user, Market market, ArrayList<Product> products, int[] number) {
         this.user = user;
         this.market = market;
         this.products = products;
+        counter = number;
         cost = calculateCost();
         comment = null;
         status = OrderStatus.PROCESSING;
     }
+
     private Double calculateCost() {
         Double cost = 0.0;
-        for (Product currentProduct : products) {
-            cost += currentProduct.getCost();
+        for (int i = 0; i < products.size(); i++) {
+            cost += products.get(i).orderThisProduct(counter[i]);
         }
         return cost;
     }
@@ -39,6 +42,14 @@ public class Order {
         this.comment = comment;
         user.addComment(comment);
         market.addComment(comment);
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
     }
 
     public Market getMarket() {
@@ -67,8 +78,8 @@ public class Order {
 
     private String returnProducts() {
         String result = "";
-        for (Product currentProduct : products) {
-            result += currentProduct.getName() + ", ";
+        for (int i = 0; i < products.size(); i++) {
+            result += products.get(i).getName() + "(" + counter[i] + "), ";
         }
         return result;
     }

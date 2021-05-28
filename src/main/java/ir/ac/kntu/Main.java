@@ -2,6 +2,7 @@ package ir.ac.kntu;
 
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.menu.LoginMenu;
+import ir.ac.kntu.model.classes.markets.FruitShop;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.markets.Restaurant;
 import ir.ac.kntu.model.classes.markets.SuperMarket;
@@ -9,6 +10,7 @@ import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.classes.products.Food;
+import ir.ac.kntu.model.classes.products.Fruit;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.classes.products.SuperProduct;
 import ir.ac.kntu.model.enums.AccountType;
@@ -53,6 +55,7 @@ public class Main extends Application {
         createFakeAccounts(engine);
         createFakeRestaurants(engine);
         createFakeSuperMarkets(engine);
+        createFakeFruitShops(engine);
     }
 
     private void createFakeAccounts(Engine engine) {
@@ -73,11 +76,11 @@ public class Main extends Application {
         engine.getMarketService().addMarket(restaurantTemp2);
         engine.getMarketService().addMarket(restaurantTemp3);
         engine.getMarketService().addMarket(restaurantTemp4);
-        Product foodTemp1 = new Food("Kabab",15.0);
-        Product foodTemp2 = new Food("Joje",20.0);
-        Product foodTemp3 = new Food("Pasta",10.0);
-        Product foodTemp4 = new Food("Morgh",27.3);
-        Product foodTemp5 = new Food("soop",5.0);
+        Product foodTemp1 = new Food("Kabab",20000.0);
+        Product foodTemp2 = new Food("Joje",25000.0);
+        Product foodTemp3 = new Food("Pasta",15000.0);
+        Product foodTemp4 = new Food("Morgh",30000.0);
+        Product foodTemp5 = new Food("soop",10000.0);
         restaurantTemp1.addProduct(foodTemp1);
         restaurantTemp1.addProduct(foodTemp3);
         restaurantTemp1.addProduct(foodTemp5);
@@ -94,18 +97,37 @@ public class Main extends Application {
         engine.getMarketService().addMarket(superTemp2);
         engine.getMarketService().addMarket(superTemp3);
         engine.getMarketService().addMarket(superTemp4);
-        Product superProductTemp1 = new SuperProduct("Mast",14.6,"20");
-        Product superProductTemp2 = new SuperProduct("Paneer",7.5,"15");
-        Product superProductTemp3 = new SuperProduct("Adams",25.0,"10");
-        Product superProductTemp4 = new SuperProduct("Sheer",15.1,"30");
-        Product superProductTemp5 = new SuperProduct("pofak",10.0,"0");
-        Product superProductTemp6 = new SuperProduct("Chips",12.0,"2");
+        Product superProductTemp1 = new SuperProduct("Mast",14000.0,20);
+        Product superProductTemp2 = new SuperProduct("Paneer",7000.0,15);
+        Product superProductTemp3 = new SuperProduct("Adams",25000.0,10);
+        Product superProductTemp4 = new SuperProduct("Sheer",10000.0,30);
+        Product superProductTemp5 = new SuperProduct("pofak",10000.0,0);
+        Product superProductTemp6 = new SuperProduct("Chips",12000.0,2);
         superTemp1.addProduct(superProductTemp1);
         superTemp1.addProduct(superProductTemp3);
         superTemp1.addProduct(superProductTemp5);
         superTemp2.addProduct(superProductTemp2);
         superTemp2.addProduct(superProductTemp6);
         superTemp3.addProduct(superProductTemp4);
+    }
+
+    private void createFakeFruitShops(Engine engine) {
+        Market fruitShopTemp1 = new FruitShop("Asghar Fruit","iran-mashad","8","20");
+        Market fruitShopTemp2 = new FruitShop("Fruit poonak","iran-kojast","6","23");
+        Market fruitShopTemp3 = new FruitShop("Iman meveh","iran-mobham","12","13");
+        Market fruitShopTemp4 = new FruitShop("Fruits","iran","8","10");
+        engine.getMarketService().addMarket(fruitShopTemp1);
+        engine.getMarketService().addMarket(fruitShopTemp2);
+        engine.getMarketService().addMarket(fruitShopTemp3);
+        engine.getMarketService().addMarket(fruitShopTemp4);
+        Product fruitTemp1 = new Fruit("apple",1000.0,100);
+        Product fruitTemp2 = new Fruit("Orange",2000.0,200);
+        Product fruitTemp3 = new Fruit("banana",5000.0,50);
+        Product fruitTemp4 = new Fruit("carrot",15000.0,500);
+        fruitShopTemp1.addProduct(fruitTemp1);
+        fruitShopTemp1.addProduct(fruitTemp3);
+        fruitShopTemp1.addProduct(fruitTemp4);
+        fruitShopTemp3.addProduct(fruitTemp2);
     }
 
 }

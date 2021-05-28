@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ProductsMenu {
     private final Engine engine;
@@ -84,14 +86,15 @@ public class ProductsMenu {
             if (market.getMarketType().equals(MarketType.RESTAURANT)) {
                 ArrayList<Product> selectedProducts = new ArrayList<>();
                 selectedProducts.addAll(selectionModel.getSelectedItems());
-                engine.getOrderService().addOrder(new Order((User) account, market, selectedProducts));
+                int[] number = new int[selectedProducts.size()];
+                for (int i = 0; i < number.length; i++) {
+                    number[i] = 1;
+                }
+                engine.getOrderService().addOrder(new Order((User) account, market, selectedProducts,number));
                 alertLabel.setTextFill(Color.GREEN);
                 alertLabel.setText("Successfully Ordered");
             } else {
                 borderPane2.setCenter(showFinalizingOrder(selectionModel));
-//                for (Map.Entry<String,Integer> c: market.getSchedule()) {
-//                    System.out.println(c.getKey());
-//                }
             }
         }
     }
@@ -108,9 +111,9 @@ public class ProductsMenu {
         listView2.setPrefHeight(200);
         Label[] labels = new Label[selectedProducts.size()];
         for (int i = 0; i < selectedProducts.size(); i++) {
-            Slider slider = new Slider(0, selectedProducts.get(i).getAvailabilityInt(),0);
+            Slider slider = new Slider(selectedProducts.get(i).getAvailabilityInt() != 0 ? 1 : 0, selectedProducts.get(i).getAvailabilityInt(),0);
             slider.setShowTickLabels(true);
-            Label label= new Label("" +0);
+            Label label= new Label("" +Math.round(slider.getMin()));
             labels[i] = label;
             HBox tempHBox = new HBox(slider,label);
             listView2.getItems().add(tempHBox);
@@ -118,8 +121,37 @@ public class ProductsMenu {
         }
         HBox hBox = new HBox(listView,listView2);
         borderPane.setTop(hBox);
+        ChoiceBox choiceBox = new ChoiceBox();
+        choiceBox.getItems().addAll(market.getSchedule(2));
+        Label costLabel = new Label("Final Cost: ");
+        Button orderButton = new Button("Order");
+        Label alertLabel = new Label("");
+        orderButton.setDisable(true);
+        choiceBox.setOnAction(Event ->{
+            Map.Entry<String,Integer> temp = (Map.Entry<String, Integer>) choiceBox.getValue();
+            int[] counter = new int[selectedProducts.size()];
+            for (int i = 0; i < counter.length; i++) {
+                counter[i] = Integer.parseInt(labels[i].getText());
+            }
+            Order newOrder = new Order((User) account, market, selectedProducts, counter);
+            Double costTemp = engine.getOrderService().calculateCostOfOrder(newOrder,temp.getValue(),2);
+            newOrder.setCost(costTemp);
+            costLabel.setText("Final Cost: " + costTemp);
+            orderButton.setDisable(false);
+            orderButton.setOnAction(Event2 -> {
+                temp.setValue(temp.getValue() + 1);
+                engine.getOrderService().addOrder(newOrder);
+                alertLabel.setTextFill(Color.GREEN);
+                alertLabel.setText("Successfully Ordered");
+            });
+        });
 
+        Label period = new Label("Periods Of time: ");
+        HBox bottomHBox = new HBox(period,choiceBox,costLabel,orderButton,alertLabel);
+        bottomHBox.setSpacing(10);
+        borderPane.setCenter(bottomHBox);
         return borderPane;
+
     }
 
     private void seeCommentsButtonPressed(ObservableList<Product> temp) {

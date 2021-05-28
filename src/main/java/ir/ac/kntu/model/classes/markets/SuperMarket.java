@@ -10,8 +10,8 @@ public class SuperMarket extends Market{
 
     private String startTime;
     private String endTime;
-
     private final ArrayList<Delivery> deliveries;
+
     public SuperMarket(String name, String address, String startTime, String endTime) {
         super(name, address, MarketType.SUPER);
         this.startTime = startTime;

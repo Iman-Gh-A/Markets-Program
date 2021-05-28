@@ -5,6 +5,6 @@ import ir.ac.kntu.model.enums.ProductType;
 
 public class Food extends Product {
     public Food(String name, Double cost) {
-        super(name, cost, AvailabilityOfProduct.UNLIMITED.toString().toLowerCase(), ProductType.FOOD);
+        super(name, cost, -1, ProductType.FOOD);
     }
 }

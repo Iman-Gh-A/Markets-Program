@@ -132,8 +132,14 @@ public class Market {
         return commentsNum;
     }
 
-    public ArrayList<Map.Entry<String, Integer>> getSchedule() {
-        return schedule;
+    public ArrayList<Map.Entry<String, Integer>> getSchedule(int capacity) {
+        ArrayList<Map.Entry<String, Integer>> availableSchedule = new ArrayList<>();
+        for (Map.Entry<String,Integer> current: schedule) {
+            if (current.getValue() < capacity) {
+                availableSchedule.add(current);
+            }
+        }
+        return availableSchedule;
     }
 
     public void setSchedule(ArrayList<Map.Entry<String, Integer>> schedule) {
