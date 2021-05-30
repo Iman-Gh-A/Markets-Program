@@ -5,7 +5,6 @@ import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.MarketType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,14 +15,14 @@ public class Market {
     private final MarketType marketType;
     private final ArrayList<Product> products;
     private final ArrayList<Comment> comments;
+    private ArrayList<Map.Entry<String,Integer>> schedule;
     private int commentsNum;
     private boolean status;
-    private ArrayList<Map.Entry<String,Integer>> schedule;
 
     public Market(String name, String address, MarketType marketType) {
-        this.name = name;
-        this.address = address;
-        this.rate = 5.0;
+        setName(name);
+        setAddress(address);
+        this.rate = 2.5;
         this.marketType = marketType;
         this.products = new ArrayList<>();
         this.comments = new ArrayList<>();
@@ -34,10 +33,7 @@ public class Market {
     public void addComment(Comment comment) {
         comments.add(comment);
         commentsNum++;
-        rate = (rate * (getComments().size()) + comment.getRate()) / (getComments().size() + 1);
-        for (Product currentProduct: comment.getProducts()) {
-            currentProduct.addComment(comment);
-        }
+        updateRate(comment.getRate());
     }
 
     public void addProduct(Product product) {
@@ -45,6 +41,9 @@ public class Market {
     }
 
     public void setName(String name) {
+        if (!name.matches("[a-zA-Z\\s]+")) {
+            throw new IllegalArgumentException("The name should be a-z and A-Z");
+        }
         this.name = name;
     }
 
@@ -53,15 +52,18 @@ public class Market {
     }
 
     public void setAddress(String address) {
+        if (address.matches("\\s+")) {
+            throw new IllegalArgumentException("The address shouldn't be blank.");
+        }
         this.address = address;
     }
 
     public Double getRate() {
-        return rate;
+        return Double.parseDouble(String.format("%.1f",rate));
     }
 
-    public void setRate(Double rate) {
-        this.rate = rate;
+    public void updateRate(int addedRate) {
+        rate = (rate * (getComments().size()) + addedRate) / (getComments().size() + 1);
     }
 
     public MarketType getMarketType() {
@@ -88,6 +90,14 @@ public class Market {
         return name;
     }
 
+    public int getCommentsNum() {
+        return commentsNum;
+    }
+
+    public void setSchedule(ArrayList<Map.Entry<String, Integer>> schedule) {
+        this.schedule = schedule;
+    }
+
     public ArrayList<Product> searchByName(String nameSearching) {
         ArrayList<Product> productsContainName = new ArrayList<>();
         for (Product currentProduct : getProducts()) {
@@ -96,6 +106,16 @@ public class Market {
             }
         }
         return productsContainName;
+    }
+
+    public ArrayList<Map.Entry<String, Integer>> getSchedule(int capacity) {
+        ArrayList<Map.Entry<String, Integer>> availableSchedule = new ArrayList<>();
+        for (Map.Entry<String,Integer> current: schedule) {
+            if (current.getValue() < capacity) {
+                availableSchedule.add(current);
+            }
+        }
+        return availableSchedule;
     }
 
     @Override
@@ -126,23 +146,5 @@ public class Market {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getAddress(), getRate(), getMarketType(), getProducts(), getComments(), isStatus());
-    }
-
-    public int getCommentsNum() {
-        return commentsNum;
-    }
-
-    public ArrayList<Map.Entry<String, Integer>> getSchedule(int capacity) {
-        ArrayList<Map.Entry<String, Integer>> availableSchedule = new ArrayList<>();
-        for (Map.Entry<String,Integer> current: schedule) {
-            if (current.getValue() < capacity) {
-                availableSchedule.add(current);
-            }
-        }
-        return availableSchedule;
-    }
-
-    public void setSchedule(ArrayList<Map.Entry<String, Integer>> schedule) {
-        this.schedule = schedule;
     }
 }

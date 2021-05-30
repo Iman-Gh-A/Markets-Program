@@ -9,18 +9,18 @@ import java.util.Objects;
 
 public class Comment {
     private final String textComment;
-    private final User commentingUser;
     private final Integer rate;
+    private final User commentingUser;
     private final Market market;
     private final ArrayList<Product> products;
 
-    public Comment(String textComment, User commentingUser, Integer rate, Market market, ArrayList<Product> products) {
+    public Comment(String textComment, Integer rate, User commentingUser, Market market,
+                   ArrayList<Product> products) {
+        this.textComment = textComment;
+        this.rate = rate;
+        this.commentingUser = commentingUser;
         this.market = market;
         this.products = products;
-        this.textComment = textComment;
-        this.commentingUser = commentingUser;
-        this.rate = rate;
-
     }
 
     public String getTextComment() {
@@ -33,6 +33,10 @@ public class Comment {
 
     public ArrayList<Product> getProducts() {
         return (ArrayList<Product>) products.clone();
+    }
+
+    public String toStringComplete() {
+        return null;
     }
 
     @Override

@@ -7,6 +7,7 @@ import ir.ac.kntu.model.enums.AccountType;
 
 import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class User extends Account {
 
@@ -17,20 +18,10 @@ public class User extends Account {
 
     public User(String id, String name, String username, String password, String address, String phone) {
         super(id, name, username, password, AccountType.USER);
-        if (!phone.matches("09-\\d{3}-\\d{3}-\\d{3}")) {
-            throw new IllegalArgumentException("The phone should be 11 number and example form is: 09-123-123-123.");
-        }
-        if (!address.matches("[a-zA-Z0-9-_\\s]+")) {
-            throw new IllegalArgumentException("The address shouldn't be blank.");
-        }
-        this.address = address;
-        this.phone = phone;
+        setPhone(phone);
+        setAddress(address);
         orders = new ArrayList<>();
         comments = new ArrayList<>();
-    }
-
-    public String getPhone() {
-        return phone;
     }
 
     public void setPhone(String phone) {
@@ -40,10 +31,6 @@ public class User extends Account {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public void setAddress(String address) {
         if (!address.matches("[a-zA-Z0-9-_\\s]+")) {
             throw new IllegalArgumentException("The address shouldn't be blank.");
@@ -51,8 +38,20 @@ public class User extends Account {
         this.address = address;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public ArrayList<Order> getOrders() {
         return (ArrayList<Order>) orders.clone();
+    }
+
+    public ArrayList<Comment> getComments() {
+        return (ArrayList<Comment>) comments.clone();
     }
 
     public void addOrder(Order newOrder) {
@@ -61,5 +60,30 @@ public class User extends Account {
 
     public void addComment(Comment comment) {
         comments.add(comment);
+    }
+
+    @Override
+    public String toString() {
+        return  "ID: " + getId() +
+                " |Name: " + getName() +
+                " |Username: " + getUsername() +
+                " |Phone num: " + getPhone() +
+                " |Address: " + getAddress() +
+                " |Number of Order: " + getOrders().size() +
+                " |Number od Comment: " + getComments().size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(getAddress(), user.getAddress()) && Objects.equals(getPhone(), user.getPhone()) && Objects.equals(getOrders(), user.getOrders()) && Objects.equals(getComments(), user.getComments());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getAddress(), getPhone(), getOrders(), getComments());
     }
 }

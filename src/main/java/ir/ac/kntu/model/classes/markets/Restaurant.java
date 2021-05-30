@@ -7,28 +7,33 @@ import java.util.Objects;
 
 
 public class Restaurant extends Market {
+
     private RestaurantType type;
     private String workHour;
+
     public Restaurant(String name, String address, RestaurantType type, String workHour) {
         super(name, address, MarketType.RESTAURANT);
-        this.type = type;
-        this.workHour = workHour;
+        setWorkHour(workHour);
+        setType(type);
     }
 
-    public RestaurantType getType() {
-        return type;
+    public void setWorkHour(String workHour) {
+        if (workHour.matches("\\s+")) {
+            throw new IllegalArgumentException("\tThe weekly work hour shouldn't be blank.");
+        }
+        this.workHour = workHour;
     }
 
     public void setType(RestaurantType type) {
         this.type = type;
     }
 
-    public String getWorkHour() {
-        return workHour;
+    public RestaurantType getType() {
+        return type;
     }
 
-    public void setWorkHour(String workHour) {
-        this.workHour = workHour;
+    public String getWorkHour() {
+        return workHour;
     }
 
     @Override

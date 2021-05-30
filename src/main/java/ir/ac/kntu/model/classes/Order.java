@@ -27,7 +27,7 @@ public class Order {
         counter = number;
         cost = calculateCost();
         comment = null;
-        status = OrderStatus.PROCESSING;
+        updateStatus();
     }
 
     private Double calculateCost() {
@@ -42,6 +42,9 @@ public class Order {
         this.comment = comment;
         user.addComment(comment);
         market.addComment(comment);
+        for (Product currentProduct: getProducts()) {
+            currentProduct.addComment(comment);
+        }
     }
 
     public Double getCost() {
@@ -72,8 +75,15 @@ public class Order {
         return user;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void updateStatus() {
+        if (status.equals(OrderStatus.PROCESSING)) {
+            status = OrderStatus.SENDING;
+        } else if (status.equals(OrderStatus.SENDING)) {
+            status = OrderStatus.DELIVERED;
+        } else if (status.equals(OrderStatus.DELIVERED)){
+        } else {
+            status = OrderStatus.PROCESSING;
+        }
     }
 
     private String returnProducts() {

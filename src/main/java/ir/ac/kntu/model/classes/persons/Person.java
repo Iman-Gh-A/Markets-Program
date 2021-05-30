@@ -7,14 +7,8 @@ public class Person {
     private String id;
 
     public Person(String name, String id) {
-        if (!name.matches("[a-zA-Z\\s]+")) {
-            throw new IllegalArgumentException("The name should be a-z and A-Z");
-        }
-        if (!id.matches("\\d{10}")) {
-            throw new IllegalArgumentException("The ID should be 10 number");
-        }
-        this.name = name;
-        this.id = id;
+        setName(name);
+        setId(id);
     }
 
     public void setId(String id) {
@@ -24,15 +18,15 @@ public class Person {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (!name.matches("[a-zA-Z\\s]+")) {
             throw new IllegalArgumentException("The name should be a-z and A-Z");
         }
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getId() {

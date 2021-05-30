@@ -8,50 +8,50 @@ import java.util.*;
 
 public class SuperMarket extends Market{
 
-    private String startTime;
-    private String endTime;
+    private Integer startTime;
+    private Integer endTime;
     private final ArrayList<Delivery> deliveries;
+    private int capacity;
 
-    public SuperMarket(String name, String address, String startTime, String endTime) {
+    public SuperMarket(String name, String address, Integer startTime, Integer endTime, int capacity) {
         super(name, address, MarketType.SUPER);
+        this.capacity = capacity;
+        setStartEndSchedule(startTime,endTime);
+        deliveries = new ArrayList<>();
+    }
+
+    public void setStartEndSchedule(Integer startTime, Integer endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
         setSchedule(exportSchedule());
-        deliveries = new ArrayList<>();
     }
 
     private ArrayList<Map.Entry<String,Integer>> exportSchedule() {
         HashMap<String,Integer> schedule = new HashMap<>();
-        ArrayList<Map.Entry<String,Integer>> temp2 = new ArrayList<>();
-        int start = Integer.parseInt(startTime);
-        int end = Integer.parseInt(endTime);
-        String temp = "" + start;
-        for (int i = start + 1; i <= end; i++) {
+        ArrayList<Map.Entry<String,Integer>> listOfSchedule = new ArrayList<>();
+        String temp = "" + startTime;
+        for (int i = startTime + 1; i <= endTime; i++) {
             schedule.put(temp + " - " + i,0);
             temp = "" + i;
         }
-        temp2.addAll(schedule.entrySet());
-        temp2.sort(ComparatorHelper.schedule());
-        return temp2;
+        listOfSchedule.addAll(schedule.entrySet());
+        listOfSchedule.sort(ComparatorHelper.schedule());
+        return listOfSchedule;
     }
 
-    public String getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
+    public Integer getEndTime() {
         return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public ArrayList<Delivery> getDeliveries() {
         return (ArrayList<Delivery>) deliveries.clone();
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 }

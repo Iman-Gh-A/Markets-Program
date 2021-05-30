@@ -180,7 +180,7 @@ public class UserMenu {
                     if (!order.getStatus().equals(OrderStatus.DELIVERED)) {
                         throw new IllegalArgumentException("this order doesn't delivered.");
                     }
-                    order.addComment(new Comment(commentArea.getText().trim(), account, (Integer) selectRate.getValue(), order.getMarket(), order.getProducts()));
+                    order.addComment(new Comment(commentArea.getText().trim(),(Integer) selectRate.getValue(), account,  order.getMarket(), order.getProducts()));
                     alertLabel.setTextFill(Color.GREEN);
                     alertLabel.setText("Successfully Commenting");
                 }

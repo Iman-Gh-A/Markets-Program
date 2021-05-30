@@ -3,6 +3,7 @@ package ir.ac.kntu.model.classes.persons;
 import ir.ac.kntu.model.enums.AccountType;
 
 import java.lang.IllegalArgumentException;
+import java.util.Objects;
 
 public class Account extends Person {
     private String username;
@@ -49,5 +50,18 @@ public class Account extends Person {
             throw new IllegalArgumentException("The password should be a-z, A-Z, 0-9 and _ character which is at least 4 characters.");
         }
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return Objects.equals(getUsername(), account.getUsername()) && Objects.equals(getPassword(), account.getPassword()) && getAccountType() == account.getAccountType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getPassword(), getAccountType());
     }
 }

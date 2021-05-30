@@ -16,12 +16,12 @@ public class AccountService {
     }
 
     public void addAccount(Account newAccount) {
-        if (searchAccountByUsername(newAccount.getUsername()) != null) {
-            throw new IllegalArgumentException("The username has already been used.");
-        }
-        if (searchAccountByID(newAccount.getId()) != null) {
-            throw new IllegalArgumentException("The ID has already been used.");
-        }
+//        if (searchAccountByUsername(newAccount.getUsername()) != null) {
+//            throw new IllegalArgumentException("The username has already been used.");
+//        }
+//        if (searchAccountByID(newAccount.getId()) != null) {
+//            throw new IllegalArgumentException("The ID has already been used.");
+//        }
         accounts.add(newAccount);
     }
 

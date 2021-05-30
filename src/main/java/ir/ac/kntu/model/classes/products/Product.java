@@ -16,11 +16,14 @@ public class Product {
     private final ProductType productType;
 
     public Product(String name, Double cost, int availability, ProductType productType) {
+        if (!name.matches("[a-zA-Z\\s]+")) {
+            throw new IllegalArgumentException("The name should be a-z and A-Z");
+        }
         this.name = name;
         this.cost = cost;
         this.availability = availability;
         this.productType = productType;
-        this.rate = 5.0;
+        this.rate = 2.5;
         comments = new ArrayList<>();
         commentsNum = 0;
 
@@ -29,7 +32,7 @@ public class Product {
     public void addComment(Comment comment) {
         comments.add(comment);
         commentsNum++;
-        rate = (comment.getRate() + rate * getComments().size() ) / (getComments().size() + 1);
+        updateRate(comment.getRate());
     }
 
     public Double getCost() {
@@ -40,8 +43,8 @@ public class Product {
         return rate;
     }
 
-    public void setRate(Double rate) {
-        this.rate = rate;
+    public void updateRate(int addedRate) {
+        rate = (addedRate + rate * getComments().size() ) / (getComments().size() + 1);
     }
 
     public ArrayList<Comment> getComments() {
@@ -72,7 +75,7 @@ public class Product {
 
     public double orderThisProduct(int number) {
         setAvailability(getAvailabilityInt() - number );
-        return getCost()*number;
+        return getCost() * number;
     }
 
     public ProductType getProductType() {
