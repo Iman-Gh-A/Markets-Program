@@ -1,6 +1,8 @@
 package ir.ac.kntu.service;
 
 import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.persons.User;
+import ir.ac.kntu.model.enums.AccountType;
 
 import java.util.ArrayList;
 
@@ -16,12 +18,12 @@ public class AccountService {
     }
 
     public void addAccount(Account newAccount) {
-//        if (searchAccountByUsername(newAccount.getUsername()) != null) {
-//            throw new IllegalArgumentException("The username has already been used.");
-//        }
-//        if (searchAccountByID(newAccount.getId()) != null) {
-//            throw new IllegalArgumentException("The ID has already been used.");
-//        }
+        if (searchAccountByUsername(newAccount.getUsername()) != null) {
+            throw new IllegalArgumentException("The username has already been used.");
+        }
+        if (searchAccountByID(newAccount.getId()) != null) {
+            throw new IllegalArgumentException("The ID has already been used.");
+        }
         accounts.add(newAccount);
     }
 
@@ -41,5 +43,27 @@ public class AccountService {
             }
         }
         return null;
+    }
+
+    public void updateUser(Account oldAccount,Account editedAccount,String newPassword) {
+        if (!oldAccount.getAccountType().equals(AccountType.USER) || !editedAccount.getAccountType().equals(AccountType.USER)) {
+            throw new IllegalArgumentException("the account isn't user.");
+        }
+        User oldUser = (User) oldAccount;
+        User editedUser = (User) editedAccount;
+        if (searchAccountByID(editedUser.getId()) != oldUser && searchAccountByID(editedUser.getId()) != null) {
+            throw new IllegalArgumentException("The ID has already been used.");
+        }
+        if (searchAccountByUsername(editedUser.getUsername()) != oldUser && searchAccountByUsername(editedUser.getUsername()) != null) {
+            throw new IllegalArgumentException("The username has already been used.");
+        }
+        oldUser.setName(editedUser.getName());
+        oldUser.setId(editedUser.getId());
+        oldUser.setUsername(editedUser.getUsername());
+        if (!newPassword.equals("")) {
+            oldUser.setPassword(newPassword);
+        }
+        oldUser.setPhone(editedUser.getPhone());
+        oldUser.setAddress(editedUser.getAddress());
     }
 }

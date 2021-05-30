@@ -3,11 +3,15 @@ package ir.ac.kntu.menu;
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.persons.Account;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -20,42 +24,37 @@ public class LoginMenu {
     }
 
     public void getLoginPain() {
+        BorderPane borderPane = new BorderPane();
         Label labelUsername = new Label("Username");
-        labelUsername.setLayoutX(200);
-        labelUsername.setLayoutY(200);
-
+        Label labelPassword = new Label("Password");
+        VBox leftVBox = new VBox(labelUsername,labelPassword);
+        leftVBox.setSpacing(20);
+        leftVBox.setAlignment(Pos.CENTER);
         TextField usernameField = new TextField();
         usernameField.setPromptText("username");
-        usernameField.setLayoutX(270);
-        usernameField.setLayoutY(195);
-
-        Label labelPassword = new Label("Password");
-        labelPassword.setLayoutX(200);
-        labelPassword.setLayoutY(230);
-
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("password");
-        passwordField.setLayoutX(270);
-        passwordField.setLayoutY(225);
-
+        VBox rightVBox = new VBox(usernameField,passwordField);
+        rightVBox.setSpacing(10);
+        rightVBox.setAlignment(Pos.CENTER);
+        HBox hBox = new HBox(leftVBox,rightVBox);
+        hBox.setSpacing(5);
+        hBox.setAlignment(Pos.CENTER);
         Label labelErrors = new Label();
-        labelErrors.setLayoutX(200);
-        labelErrors.setLayoutY(260);
-        labelErrors.setTextFill(Color.RED);
-
         Button signInButton = new Button("Sign in");
-        signInButton.setLayoutX(380);
-        signInButton.setLayoutY(300);
-
         Button signUpButton = new Button("Sign up");
-        signUpButton.setLayoutX(270);
-        signUpButton.setLayoutY(300);
-
+        HBox hBoxButton = new HBox(signUpButton,signInButton);
+        hBoxButton.setSpacing(30);
+        hBoxButton.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox(hBox,labelErrors,hBoxButton);
+        vBox.setSpacing(10);
+        vBox.setAlignment(Pos.CENTER);
+        borderPane.setCenter(vBox);
         signInButton.setOnAction(Event->{
             try {
                 signInButtonPressed(usernameField.getText().trim(), passwordField.getText());
-                labelErrors.setText("");
             } catch (Exception e) {
+                labelErrors.setTextFill(Color.RED);
                 labelErrors.setText(e.getMessage());
             }
         });
@@ -65,22 +64,22 @@ public class LoginMenu {
             signUpMenu.getSignUpMenu();
         });
 
-        new Main().changeScene(new Pane(labelUsername,usernameField,labelPassword,passwordField,labelErrors,signInButton,signUpButton));
+        new Main().changeScene(borderPane);
     }
 
-    private void signInButtonPressed(String username, String password) throws Exception {
+    private void signInButtonPressed(String username, String password) {
         Account currentAccount = engine.getAccountService().searchAccountByUsername(username);
         if (currentAccount != null && currentAccount.getPassword().equals(password)) {
             try {
                 AdminMenu adminMenu = new AdminMenu(currentAccount, engine);
-                adminMenu.showMenu();
-            } catch (IOException e) {
+                adminMenu.showBaseMenu();
+            } catch (Exception e) {
                 try {
                     ManagerMenu managerMenu = new ManagerMenu(currentAccount, engine);
-                    managerMenu.showMenu();
-                } catch (IOException c) {
+                    managerMenu.showBaseMenu();
+                } catch (Exception c) {
                     UserMenu userMenu = new UserMenu(currentAccount, engine);
-                    userMenu.showMenu();
+                    userMenu.showBaseMenu();
                 }
             }
         } else {

@@ -10,15 +10,15 @@ public class ManagerMenu {
     private final Account account;
     private final Engine engine;
 
-    public ManagerMenu(Account account, Engine engine) throws IOException {
+    public ManagerMenu(Account account, Engine engine) {
         this.engine = engine;
         if (!account.getAccountType().equals(AccountType.MANAGER)) {
-            throw new IOException("Account is not manager");
+            throw new IllegalArgumentException("Account is not manager");
         }
         this.account = account;
     }
 
-    public void showMenu() {
+    public void showBaseMenu() {
         System.out.println("manager menu " + account.getName() + account.getAccountType());
     }
 }

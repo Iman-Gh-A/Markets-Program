@@ -5,41 +5,35 @@ import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.Order;
 import ir.ac.kntu.model.classes.persons.Account;
-import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
 import ir.ac.kntu.model.enums.MarketType;
 import ir.ac.kntu.model.enums.OrderStatus;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.lang.IllegalArgumentException;
-import java.util.ArrayList;
 
 
-public class UserMenu {
+public class UserMenu{
 
     private final User account;
     private final Engine engine;
-    public UserMenu(Account account, Engine engine) throws Exception {
+    public UserMenu(Account account, Engine engine) {
         this.engine = engine;
         if (!account.getAccountType().equals(AccountType.USER)) {
-            throw new Exception("Account is not user");
+            throw new IllegalArgumentException("Account is not user");
         }
         this.account = (User) account;
     }
 
-    public void showMenu() {
+    public void showBaseMenu() {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefWidth(700);
         borderPane.setPrefHeight(500);
-        borderPane.setCenter(showProfileAndEdit());
         Label labelName = new Label("\t"+account.getName()+"\t");
         Button profileButton = new Button("Profile");
         profileButton.setPrefWidth(120);
@@ -53,6 +47,7 @@ public class UserMenu {
         leftVBox.setSpacing(10);
         leftVBox.setAlignment(Pos.CENTER);
         borderPane.setLeft(leftVBox);
+        borderPane.setCenter(showProfileAndEdit());
 
         profileButton.setOnAction(Event-> {
             borderPane.setCenter(showProfileAndEdit());
@@ -63,9 +58,10 @@ public class UserMenu {
         historyButton.setOnAction(Event ->{
             borderPane.setCenter(showOrderHistoryMenu());
         });
-
         exitButton.setOnAction(Event-> {
-            new LoginMenu(engine).getLoginPain(); });
+            new LoginMenu(engine).getLoginPain();
+        });
+
         new Main().changeScene(new Pane(borderPane));
     }
 
@@ -104,7 +100,7 @@ public class UserMenu {
         saveButton.setOnAction(Event ->{
             try {
                 User tempUser = new User(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234",addressField.getText().trim(),phoneField.getText().trim());
-                updateUser(tempUser,passwordField.getText());
+                engine.getAccountService().updateUser(account,tempUser,passwordField.getText());
                 labelError.setTextFill(Color.GREEN);
                 labelError.setText("Successfully Change");
             } catch (Exception e) {
@@ -113,23 +109,6 @@ public class UserMenu {
             }
         });
         return borderPane;
-    }
-
-    private void updateUser(User user,String password) {
-        if (engine.getAccountService().searchAccountByID(user.getId()) != account && engine.getAccountService().searchAccountByID(user.getId()) != null) {
-            throw new IllegalArgumentException("The ID has already been used.");
-        }
-        if (engine.getAccountService().searchAccountByUsername(user.getUsername()) != account && engine.getAccountService().searchAccountByUsername(user.getUsername()) != null) {
-            throw new IllegalArgumentException("The username has already been used.");
-        }
-        account.setName(user.getName());
-        account.setId(user.getId());
-        account.setUsername(user.getUsername());
-        account.setPhone(user.getPhone());
-        account.setAddress(user.getAddress());
-        if (!password.equals("")) {
-            account.setPassword(password);
-        }
     }
 
     private Pane showOrderingMenu() {
@@ -147,8 +126,6 @@ public class UserMenu {
         restaurantTab.setContent(marketsMenu.showMarketsForOrdering(MarketType.RESTAURANT));
         superTab.setContent(marketsMenu.showMarketsForOrdering(MarketType.SUPER));
         shopTab.setContent(marketsMenu.showMarketsForOrdering(MarketType.FRUITSHOP));
-
-
         return borderPane;
     }
 
@@ -163,10 +140,10 @@ public class UserMenu {
         borderPane.setTop(topVBox);
         VBox bottomVBox = new VBox();
         ChoiceBox selectRate = new ChoiceBox();
-        selectRate.getItems().addAll(1,2,3,4,5,6,7,8,9,10);
+        selectRate.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10);
         TextArea commentArea = new TextArea();
         commentArea.setPromptText("Write your comment related about selected order");
-        Button commentingButton = new Button("Commenting");
+        Button commentingButton = new Button("Comment");
         Label alertLabel = new Label("");
         borderPane.setBottom(new VBox(new HBox(new Label("Rate"),selectRate,alertLabel),commentArea,commentingButton));
         commentingButton.setOnAction(Event-> {

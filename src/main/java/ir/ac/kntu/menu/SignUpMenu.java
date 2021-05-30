@@ -73,7 +73,6 @@ public class SignUpMenu {
         HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
         hBox.setSpacing(5);
         borderPane.setCenter(new VBox(pane,hBox));
-
         selectBox.setOnAction(Event->{
             if (selectBox.getValue().equals(AccountType.USER)) {
                 leftLeftVBox.getChildren().addAll(labelPhone,labelAddress);
@@ -93,17 +92,13 @@ public class SignUpMenu {
             }
         });
         backButton.setOnAction(Event-> {
-            LoginMenu loginMenu = new LoginMenu(engine);
-            loginMenu.getLoginPain();
+            new LoginMenu(engine).getLoginPain();
         });
         new Main().changeScene(borderPane);
     }
 
     private void createUserButtonPressed(Label labelError,Account accountTemp,String address,String phone) {
         try {
-            if (accountTemp.getAccountType() == null) {
-                throw new IllegalArgumentException("The account's type shouldn't be blank.");
-            }
             Account newAccount;
             if (accountTemp.getAccountType().equals(AccountType.USER)) {
                 newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone);
