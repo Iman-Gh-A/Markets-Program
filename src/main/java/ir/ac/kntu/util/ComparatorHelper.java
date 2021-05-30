@@ -44,6 +44,7 @@ public class ComparatorHelper {
     public static Comparator<Map.Entry<String,Integer>> schedule() {
         return SCHEDULE;
     }
+
     public static Comparator<Restaurant> rateRestaurantComparator() {
         return RESTAURANT_RATE;
     }
@@ -62,6 +63,6 @@ public class ComparatorHelper {
 
     public static Comparator<Food> commentNumberFoodComparator() {
         return FOOD_COMMENT_NUMBER;
-    };
+    }
 
 }

@@ -7,6 +7,7 @@ import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.MarketType;
+import ir.ac.kntu.model.enums.ProductType;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,7 +20,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ProductsMenu {
     private final Engine engine;
@@ -33,7 +33,7 @@ public class ProductsMenu {
     }
 
     public Pane showProductsOfMarketMenu() {
-        ArrayList<Product> relatedMarkets = market.searchByName("");
+        ArrayList<Product> relatedMarkets = market.searchProductsByName("");
         BorderPane borderPane = new BorderPane();
         BorderPane innerBorderPane = new BorderPane();
         Button searchButton = new Button("Search");
@@ -63,25 +63,23 @@ public class ProductsMenu {
         Label alertLabel = new Label("");
         innerBorderPane.setCenter(tableView);
         innerBorderPane.setBottom(new HBox(orderButton,seeComments,alertLabel));
-        BorderPane borderPane2 = new BorderPane();
-        borderPane2.setCenter(innerBorderPane);
-        borderPane.setCenter(borderPane2);
+        borderPane.setCenter(innerBorderPane);
 
         orderButton.setOnAction(Event-> {
-            orderButtonPressed(borderPane2,selectionModel,alertLabel);
+            orderButtonPressed(borderPane,selectionModel,alertLabel);
         });
         seeComments.setOnAction(Event-> {
             seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems());
         });
         searchButton.setOnAction(Event-> {
-            ArrayList<Product> searchedProducts = market.searchByName(searchField.getText());
+            ArrayList<Product> searchedProducts = market.searchProductsByName(searchField.getText());
             tableView.getItems().clear();
             tableView.getItems().addAll(searchedProducts);
         });
         return borderPane;
     }
 
-    private void orderButtonPressed(BorderPane borderPane2, TableView.TableViewSelectionModel<Product> selectionModel , Label alertLabel) {
+    private void orderButtonPressed(BorderPane borderPane, TableView.TableViewSelectionModel<Product> selectionModel, Label alertLabel) {
         if (selectionModel.getSelectedItems().size() != 0) {
             if (market.getMarketType().equals(MarketType.RESTAURANT)) {
                 ArrayList<Product> selectedProducts = new ArrayList<>();
@@ -94,7 +92,7 @@ public class ProductsMenu {
                 alertLabel.setTextFill(Color.GREEN);
                 alertLabel.setText("Successfully Ordered");
             } else {
-                borderPane2.setCenter(showFinalizingOrder(selectionModel));
+                borderPane.setCenter(showFinalizingOrder(selectionModel));
             }
         }
     }
@@ -111,7 +109,7 @@ public class ProductsMenu {
         listView2.setPrefHeight(200);
         Label[] labels = new Label[selectedProducts.size()];
         for (int i = 0; i < selectedProducts.size(); i++) {
-            Slider slider = new Slider(selectedProducts.get(i).getAvailabilityInt() != 0 ? 1 : 0, selectedProducts.get(i).getAvailabilityInt(),0);
+            Slider slider = new Slider(selectedProducts.get(i).getAvailabilityInt() != 0 ? 1 : 0, selectedProducts.get(i).getProductType().equals(ProductType.FRUIT) ? selectedProducts.get(i).getAvailabilityInt()/5 : selectedProducts.get(i).getAvailabilityInt(),0);
             slider.setShowTickLabels(true);
             Label label= new Label("" +Math.round(slider.getMin()));
             labels[i] = label;
@@ -119,10 +117,9 @@ public class ProductsMenu {
             listView2.getItems().add(tempHBox);
             slider.valueProperty().addListener((observableValue, number, t1) -> label.setText("" + Math.round(t1.intValue())));
         }
-        HBox hBox = new HBox(listView,listView2);
-        borderPane.setTop(hBox);
+        borderPane.setTop(new HBox(listView,listView2));
         ChoiceBox choiceBox = new ChoiceBox();
-        choiceBox.getItems().addAll(market.getSchedule(2));
+        choiceBox.getItems().addAll(market.getSchedule());
         Label costLabel = new Label("Final Cost: ");
         Button orderButton = new Button("Order");
         Label alertLabel = new Label("");
@@ -134,16 +131,10 @@ public class ProductsMenu {
                 counter[i] = Integer.parseInt(labels[i].getText());
             }
             Order newOrder = new Order((User) account, market, selectedProducts, counter);
-            Double costTemp = engine.getOrderService().calculateCostOfOrder(newOrder,temp.getValue(),2);
+            Double costTemp = engine.getOrderService().calculateCostOfOrder(newOrder,temp.getValue());
             newOrder.setCost(costTemp);
             costLabel.setText("Final Cost: " + costTemp);
-            orderButton.setDisable(false);
-            orderButton.setOnAction(Event2 -> {
-                temp.setValue(temp.getValue() + 1);
-                engine.getOrderService().addOrder(newOrder);
-                alertLabel.setTextFill(Color.GREEN);
-                alertLabel.setText("Successfully Ordered");
-            });
+            choiceBoxUpdate(newOrder,temp,alertLabel,orderButton);
         });
 
         Label period = new Label("Periods Of time: ");
@@ -151,7 +142,16 @@ public class ProductsMenu {
         bottomHBox.setSpacing(10);
         borderPane.setCenter(bottomHBox);
         return borderPane;
+    }
 
+    private void choiceBoxUpdate(Order newOrder, Map.Entry<String,Integer> temp,Label alertLabel,Button orderButton) {
+        orderButton.setDisable(false);
+        orderButton.setOnAction(Event2 -> {
+            temp.setValue(temp.getValue() + 1);
+            engine.getOrderService().addOrder(newOrder);
+            alertLabel.setTextFill(Color.GREEN);
+            alertLabel.setText("Successfully Ordered");
+        });
     }
 
     private void seeCommentsButtonPressed(ObservableList<Product> temp) {

@@ -76,13 +76,12 @@ public class Order {
     }
 
     public void updateStatus() {
-        if (status.equals(OrderStatus.PROCESSING)) {
+        if (status == null) {
+            status = OrderStatus.PROCESSING;
+        }else if (status.equals(OrderStatus.PROCESSING)) {
             status = OrderStatus.SENDING;
         } else if (status.equals(OrderStatus.SENDING)) {
             status = OrderStatus.DELIVERED;
-        } else if (status.equals(OrderStatus.DELIVERED)){
-        } else {
-            status = OrderStatus.PROCESSING;
         }
     }
 

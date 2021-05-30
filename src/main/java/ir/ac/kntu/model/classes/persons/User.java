@@ -75,9 +75,15 @@ public class User extends Account {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         User user = (User) o;
         return Objects.equals(getAddress(), user.getAddress()) && Objects.equals(getPhone(), user.getPhone()) && Objects.equals(getOrders(), user.getOrders()) && Objects.equals(getComments(), user.getComments());
     }

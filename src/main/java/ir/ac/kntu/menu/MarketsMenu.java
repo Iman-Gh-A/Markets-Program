@@ -54,24 +54,20 @@ public class MarketsMenu {
         innerBorderPane.setCenter(tableView);
         innerBorderPane.setBottom(new HBox(nextButton,seeComments));
         Button backButton = new Button("Back");
-        BorderPane borderPane2 = new BorderPane();
-        borderPane2.setCenter(innerBorderPane);
-        VBox vBox = new VBox(borderPane2,backButton);
-        borderPane.setCenter(vBox);
+        borderPane.setCenter(innerBorderPane);
+        borderPane.setBottom(backButton);
         nextButton.setOnAction(Event-> {
             ObservableList<Market> temp = tableView.getSelectionModel().getSelectedItems();
             if (temp.size() != 0) {
                 Market selectedMarket = temp.get(0);
                 ProductsMenu productsMenu = new ProductsMenu(engine, account, selectedMarket);
-                borderPane2.setCenter(productsMenu.showProductsOfMarketMenu());
+                borderPane.setCenter(productsMenu.showProductsOfMarketMenu());
             }
         });
         seeComments.setOnAction(Event-> {
             seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems());
         });
-        backButton.setOnAction(Event-> {
-            borderPane2.setCenter(innerBorderPane);
-        });
+        backButton.setOnAction(Event-> borderPane.setCenter(innerBorderPane));
         searchButton.setOnAction(Event-> {
             ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
             tableView.getItems().clear();

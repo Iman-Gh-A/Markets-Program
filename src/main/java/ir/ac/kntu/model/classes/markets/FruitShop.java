@@ -12,11 +12,10 @@ public class FruitShop extends Market{
     private Integer startTime;
     private Integer endTime;
     private final ArrayList<Delivery> deliveries;
-    private int capacity;
 
     public FruitShop(String name, String address, Integer startTime, Integer endTime, int capacity) {
         super(name, address, MarketType.FRUITSHOP);
-        this.capacity = capacity;
+        setCapacity(capacity);
         setStartEndSchedule(startTime,endTime);
         deliveries = new ArrayList<>();
     }
@@ -50,9 +49,5 @@ public class FruitShop extends Market{
 
     public ArrayList<Delivery> getDeliveries() {
         return (ArrayList<Delivery>) deliveries.clone();
-    }
-
-    public int getCapacity() {
-        return capacity;
     }
 }

@@ -16,8 +16,8 @@ public class OrderService {
         newOrder.getUser().addOrder(newOrder);
     }
 
-    public Double calculateCostOfOrder(Order order, int num,int capacity) {
-        return order.getCost() + (num >= capacity / 2 ? 1.5 * 5000 : 5000);
+    public Double calculateCostOfOrder(Order order, int num) {
+        return order.getCost() + (num >= order.getMarket().getCapacity() / 2 ? 1.5 * 5000 : 5000);
     }
 
     public ArrayList<Order> getOrders() {

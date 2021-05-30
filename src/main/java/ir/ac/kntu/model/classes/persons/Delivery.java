@@ -42,8 +42,12 @@ public class Delivery extends Person {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Delivery)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Delivery)) {
+            return false;
+        }
         Delivery delivery = (Delivery) o;
         return getVehicleType() == delivery.getVehicleType() && Objects.equals(getOrders(), delivery.getOrders());
     }

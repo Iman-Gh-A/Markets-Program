@@ -79,9 +79,15 @@ public class DeliveryForRestaurant extends Delivery{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DeliveryForRestaurant)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DeliveryForRestaurant)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         DeliveryForRestaurant that = (DeliveryForRestaurant) o;
         return Objects.equals(getWeeklySchedule(), that.getWeeklySchedule()) && Objects.equals(getMarket1(), that.getMarket1()) && Objects.equals(getMarket2(), that.getMarket2());
     }

@@ -18,6 +18,7 @@ public class Market {
     private ArrayList<Map.Entry<String,Integer>> schedule;
     private int commentsNum;
     private boolean status;
+    private int capacity;
 
     public Market(String name, String address, MarketType marketType) {
         setName(name);
@@ -45,6 +46,10 @@ public class Market {
             throw new IllegalArgumentException("The name should be a-z and A-Z");
         }
         this.name = name;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
     public String getAddress() {
@@ -98,7 +103,7 @@ public class Market {
         this.schedule = schedule;
     }
 
-    public ArrayList<Product> searchByName(String nameSearching) {
+    public ArrayList<Product> searchProductsByName(String nameSearching) {
         ArrayList<Product> productsContainName = new ArrayList<>();
         for (Product currentProduct : getProducts()) {
             if (currentProduct.getName().toLowerCase().contains(nameSearching.toLowerCase())) {
@@ -108,7 +113,11 @@ public class Market {
         return productsContainName;
     }
 
-    public ArrayList<Map.Entry<String, Integer>> getSchedule(int capacity) {
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public ArrayList<Map.Entry<String, Integer>> getSchedule() {
         ArrayList<Map.Entry<String, Integer>> availableSchedule = new ArrayList<>();
         for (Map.Entry<String,Integer> current: schedule) {
             if (current.getValue() < capacity) {

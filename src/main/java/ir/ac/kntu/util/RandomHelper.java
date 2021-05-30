@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class RandomHelper {
 
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
     public static String getRandomWord() {
         String createdWord = "";
@@ -15,10 +15,10 @@ public class RandomHelper {
     }
 
     public static Double getRandomCost() {
-        return getRandomInt(5000,50000) + Double.parseDouble(String.format("%.2f",random.nextDouble()));
+        return getRandomInt(5000,50000) + Double.parseDouble(String.format("%.2f", RANDOM.nextDouble()));
     }
 
     public static int getRandomInt(int start,int end) {
-        return start + random.nextInt(end - start + 1);
+        return start + RANDOM.nextInt(end - start + 1);
     }
 }
