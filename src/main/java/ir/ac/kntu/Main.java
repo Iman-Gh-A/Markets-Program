@@ -7,6 +7,7 @@ import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.markets.Restaurant;
 import ir.ac.kntu.model.classes.markets.SuperMarket;
 import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.persons.Admin;
 import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.classes.products.Food;
@@ -15,6 +16,7 @@ import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.classes.products.SuperProduct;
 import ir.ac.kntu.model.enums.AccountType;
 import ir.ac.kntu.model.enums.RestaurantType;
+import ir.ac.kntu.util.RandomHelper;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -59,9 +61,9 @@ public class Main extends Application {
     }
 
     private void createFakeAccounts(Engine engine) {
-        Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh", AccountType.USER,"Iran-Tehran","09-207-410-787");
-        Account adminTemp1 = new Account("2222222222","Admin", "admin", "admin", AccountType.ADMIN);
-        Account managerTemp1 = new Manager("3333333333","Ali Emami Manager", "ali", "alie", AccountType.MANAGER);
+        Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh","Iran-Tehran","09-207-410-787");
+        Account adminTemp1 = new Admin("2222222222","Admin", "admin", "admin");
+        Account managerTemp1 = new Manager("3333333333","Ali Emami Manager", "ali", "alie");
         engine.getAccountService().addAccount(userTemp1);
         engine.getAccountService().addAccount(adminTemp1);
         engine.getAccountService().addAccount(managerTemp1);

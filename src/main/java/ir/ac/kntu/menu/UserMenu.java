@@ -103,7 +103,7 @@ public class UserMenu {
         borderPane.setCenter(hBox);
         saveButton.setOnAction(Event ->{
             try {
-                User tempUser = new User(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234",AccountType.USER,addressField.getText().trim(),phoneField.getText().trim());
+                User tempUser = new User(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234",addressField.getText().trim(),phoneField.getText().trim());
                 updateUser(tempUser,passwordField.getText());
                 labelError.setTextFill(Color.GREEN);
                 labelError.setText("Successfully Change");

@@ -15,8 +15,8 @@ public class User extends Account {
     private final ArrayList<Order> orders;
     private final ArrayList<Comment> comments;
 
-    public User(String id, String name, String username, String password, AccountType accountType, String address, String phone) {
-        super(id, name, username, password, accountType);
+    public User(String id, String name, String username, String password, String address, String phone) {
+        super(id, name, username, password, AccountType.USER);
         if (!phone.matches("09-\\d{3}-\\d{3}-\\d{3}")) {
             throw new IllegalArgumentException("The phone should be 11 number and example form is: 09-123-123-123.");
         }

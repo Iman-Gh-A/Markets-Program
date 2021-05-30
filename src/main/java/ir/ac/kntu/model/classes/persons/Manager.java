@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public class Manager extends Account {
 
     private final ArrayList<Market> markets;
-    public Manager(String id, String name, String username, String password, AccountType accountType){
-        super(id, name, username, password, accountType);
+    public Manager(String id, String name, String username, String password){
+        super(id, name, username, password, AccountType.MANAGER);
         markets = new ArrayList<>();
     }
 

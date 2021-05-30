@@ -62,6 +62,6 @@ public class ComparatorHelper {
 
     public static Comparator<Food> commentNumberFoodComparator() {
         return FOOD_COMMENT_NUMBER;
-    }
+    };
 
 }

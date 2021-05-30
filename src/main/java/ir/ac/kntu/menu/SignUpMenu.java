@@ -3,6 +3,7 @@ package ir.ac.kntu.menu;
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.persons.Admin;
 import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
@@ -105,11 +106,11 @@ public class SignUpMenu {
             }
             Account newAccount;
             if (accountTemp.getAccountType().equals(AccountType.USER)) {
-                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType(),address,phone);
+                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone);
             } else if(accountTemp.getAccountType().equals(AccountType.MANAGER)) {
-                newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType());
+                newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
             } else {
-                newAccount = new Account(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),accountTemp.getAccountType());
+                newAccount = new Admin(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
             }
             engine.getAccountService().addAccount(newAccount);
             labelError.setTextFill(Color.GREEN);
