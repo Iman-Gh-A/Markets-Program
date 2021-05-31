@@ -131,7 +131,7 @@ public class UserMenu{
 
     private Pane showOrderHistoryMenu() {
         BorderPane borderPane = new BorderPane();
-        ListView listView = new ListView();
+        ListView<Order> listView = new ListView<>();
         listView.setPrefHeight(200);
         VBox topVBox = new VBox(new Label("Order History"));
         listView.getItems().addAll(account.getOrders());
@@ -139,7 +139,7 @@ public class UserMenu{
         topVBox.getChildren().add(listView);
         borderPane.setTop(topVBox);
         VBox bottomVBox = new VBox();
-        ChoiceBox selectRate = new ChoiceBox();
+        ChoiceBox<Integer> selectRate = new ChoiceBox<>();
         selectRate.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10);
         TextArea commentArea = new TextArea();
         commentArea.setPromptText("Write your comment related about selected order");

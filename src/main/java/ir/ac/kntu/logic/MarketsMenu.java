@@ -1,6 +1,7 @@
 package ir.ac.kntu.logic;
 
 import ir.ac.kntu.engine.Engine;
+import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.enums.MarketType;
@@ -32,7 +33,7 @@ public class MarketsMenu {
         TextField searchField = new TextField("");
         searchField.setPromptText("Market's name");
         innerBorderPane.setTop(new HBox(searchField,searchButton));
-        TableView tableView = new TableView();
+        TableView<Market> tableView = new TableView<>();
         tableView.setPlaceholder(new Label("Nothing"));
         TableColumn<Market,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -63,9 +64,7 @@ public class MarketsMenu {
                 borderPane.setCenter(productsMenu.showProductsOfMarketMenu());
             }
         });
-        seeComments.setOnAction(Event-> {
-            seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems());
-        });
+        seeComments.setOnAction(Event-> seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems()));
         backButton.setOnAction(Event-> borderPane.setCenter(innerBorderPane));
         searchButton.setOnAction(Event-> {
             ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
@@ -79,7 +78,7 @@ public class MarketsMenu {
         if (temp.size() != 0) {
             Stage commentStage = new Stage();
             BorderPane borderPane = new BorderPane();
-            ListView listView = new ListView();
+            ListView<Comment> listView = new ListView<>();
             listView.setPlaceholder(new Label("Nothing"));
             listView.setPrefWidth(500);
             listView.getItems().addAll(temp.get(0).getComments());

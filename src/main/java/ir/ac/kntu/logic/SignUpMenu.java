@@ -20,10 +20,6 @@ import java.lang.IllegalArgumentException;
 public class SignUpMenu {
     private final Engine engine;
 
-    public SignUpMenu() {
-        this.engine = new Engine();
-    }
-
     public SignUpMenu(Engine engine) {
         this.engine = engine;
     }
@@ -62,7 +58,7 @@ public class SignUpMenu {
         Label labelPhone = new Label("Phone");
         Label labelSpecialAccount = new Label("Special Account");
         ToggleButton specialButton = new ToggleButton("Buy");
-        ChoiceBox selectBox = new ChoiceBox();
+        ChoiceBox<AccountType> selectBox = new ChoiceBox<>();
         selectBox.getItems().addAll(AccountType.values());
         VBox leftLeftVBox = new VBox(labelName,labelUsername,labelPassword);
         leftLeftVBox.setSpacing(23);
@@ -86,7 +82,7 @@ public class SignUpMenu {
         });
         createUserButton.setOnAction(Event->{
             try {
-                Account accountTemp = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(),(AccountType) selectBox.getValue());
+                Account accountTemp = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(), selectBox.getValue());
                 createUserButtonPressed(specialButton.isSelected(),accountTemp,addressField.getText().trim(), phoneField.getText().trim());
                 labelError.setTextFill(Color.GREEN);
                 labelError.setText("Successfully created, press back and login.");
@@ -95,9 +91,7 @@ public class SignUpMenu {
                 labelError.setText(e.getMessage());
             }
         });
-        backButton.setOnAction(Event-> {
-            new LoginMenu(engine).getLoginPain();
-        });
+        backButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
         new Main().changeScene(borderPane);
     }
 
@@ -113,7 +107,7 @@ public class SignUpMenu {
             }
             engine.getAccountService().addAccount(newAccount);
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

@@ -1,6 +1,7 @@
 package ir.ac.kntu.service;
 
 import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
 
@@ -65,5 +66,25 @@ public class AccountService {
         }
         oldUser.setPhone(editedUser.getPhone());
         oldUser.setAddress(editedUser.getAddress());
+    }
+
+    public void updateManager(Account oldAccount,Account editedAccount,String newPassword) {
+        if (!oldAccount.getAccountType().equals(AccountType.MANAGER) || !editedAccount.getAccountType().equals(AccountType.MANAGER)) {
+            throw new IllegalArgumentException("the account isn't manager.");
+        }
+        Manager oldManager = (Manager) oldAccount;
+        Manager editedManager = (Manager) editedAccount;
+        if (searchAccountByID(editedManager.getId()) != oldManager && searchAccountByID(editedManager.getId()) != null) {
+            throw new IllegalArgumentException("The ID has already been used.");
+        }
+        if (searchAccountByUsername(editedManager.getUsername()) != oldManager && searchAccountByUsername(editedManager.getUsername()) != null) {
+            throw new IllegalArgumentException("The username has already been used.");
+        }
+        oldManager.setName(editedManager.getName());
+        oldManager.setId(editedManager.getId());
+        oldManager.setUsername(editedManager.getUsername());
+        if (!newPassword.equals("")) {
+            oldManager.setPassword(newPassword);
+        }
     }
 }
