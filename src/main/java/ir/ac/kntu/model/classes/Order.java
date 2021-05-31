@@ -8,6 +8,7 @@ import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.OrderStatus;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 public class Order {
@@ -19,12 +20,14 @@ public class Order {
     private Comment comment;
     private Delivery delivery;
     private OrderStatus status;
+    private Map.Entry<String,Integer> deliveryTime;
 
-    public Order(User user, Market market, ArrayList<Product> products, int[] number) {
+    public Order(User user, Market market, ArrayList<Product> products, int[] number, Map.Entry<String, Integer> deliveryTime) {
         this.user = user;
         this.market = market;
         this.products = products;
         counter = number;
+        this.deliveryTime = deliveryTime;
         cost = calculateCost();
         comment = null;
         updateStatus();
@@ -104,7 +107,8 @@ public class Order {
                 "| Products: " + returnProducts() +
                 "| cost: " + cost +
                 "| status=" + status.toString().toLowerCase() +
-                (delivery == null ? "" : ("|  delivery: " + delivery.getName())) +
+                (deliveryTime == null ? "" : ("|  Delivery time: " + deliveryTime.getKey())) +
+                (delivery == null ? "" : ("|  Delivery: " + delivery.getName())) +
                 (comment == null ? "" : ("| Comment: " + (comment.getTextComment() +"(Rate: " + comment.getRate() + ")"))) + "\n";
     }
 

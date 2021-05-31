@@ -88,7 +88,7 @@ public class ProductsMenu {
                 for (int i = 0; i < number.length; i++) {
                     number[i] = 1;
                 }
-                engine.getOrderService().addOrder(new Order((User) account, market, selectedProducts,number));
+                engine.getOrderService().addOrder(new Order((User) account, market, selectedProducts,number, null));
                 alertLabel.setTextFill(Color.GREEN);
                 alertLabel.setText("Successfully Ordered");
             } else {
@@ -130,7 +130,7 @@ public class ProductsMenu {
             for (int i = 0; i < counter.length; i++) {
                 counter[i] = Integer.parseInt(labels[i].getText());
             }
-            Order newOrder = new Order((User) account, market, selectedProducts, counter);
+            Order newOrder = new Order((User) account, market, selectedProducts, counter, temp);
             Double costTemp = engine.getOrderService().calculateCostOfOrder(newOrder,temp.getValue());
             newOrder.setCost(costTemp);
             costLabel.setText("Final Cost: " + costTemp);
