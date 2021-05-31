@@ -1,4 +1,4 @@
-package ir.ac.kntu.menu;
+package ir.ac.kntu.logic;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
@@ -60,6 +60,8 @@ public class SignUpMenu {
         Label labelType = new Label("Account's type");
         Label labelAddress = new Label("Address");
         Label labelPhone = new Label("Phone");
+        Label labelSpecialAccount = new Label("Special Account");
+        ToggleButton specialButton = new ToggleButton("Buy");
         ChoiceBox selectBox = new ChoiceBox();
         selectBox.getItems().addAll(AccountType.values());
         VBox leftLeftVBox = new VBox(labelName,labelUsername,labelPassword);
@@ -75,17 +77,19 @@ public class SignUpMenu {
         borderPane.setCenter(new VBox(pane,hBox));
         selectBox.setOnAction(Event->{
             if (selectBox.getValue().equals(AccountType.USER)) {
-                leftLeftVBox.getChildren().addAll(labelPhone,labelAddress);
-                leftVBox.getChildren().addAll(phoneField,addressField);
+                leftLeftVBox.getChildren().addAll(labelPhone,labelAddress,labelSpecialAccount);
+                leftVBox.getChildren().addAll(phoneField,addressField,specialButton);
             } else {
-                leftLeftVBox.getChildren().removeAll(labelPhone,labelAddress);
-                leftVBox.getChildren().removeAll(phoneField,addressField);
+                leftLeftVBox.getChildren().removeAll(labelPhone,labelAddress,labelSpecialAccount);
+                leftVBox.getChildren().removeAll(labelPhone,labelAddress,specialButton);
             }
         });
         createUserButton.setOnAction(Event->{
             try {
                 Account accountTemp = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(),(AccountType) selectBox.getValue());
-                createUserButtonPressed(labelError,accountTemp,addressField.getText().trim(), phoneField.getText().trim());
+                createUserButtonPressed(specialButton.isSelected(),accountTemp,addressField.getText().trim(), phoneField.getText().trim());
+                labelError.setTextFill(Color.GREEN);
+                labelError.setText("Successfully created, press back and login.");
             } catch (IllegalArgumentException e) {
                 labelError.setTextFill(Color.RED);
                 labelError.setText(e.getMessage());
@@ -97,22 +101,19 @@ public class SignUpMenu {
         new Main().changeScene(borderPane);
     }
 
-    private void createUserButtonPressed(Label labelError,Account accountTemp,String address,String phone) {
+    private void createUserButtonPressed(boolean specialAccount,Account accountTemp,String address,String phone) {
         try {
             Account newAccount;
             if (accountTemp.getAccountType().equals(AccountType.USER)) {
-                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone);
+                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone, specialAccount);
             } else if(accountTemp.getAccountType().equals(AccountType.MANAGER)) {
                 newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
             } else {
                 newAccount = new Admin(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
             }
             engine.getAccountService().addAccount(newAccount);
-            labelError.setTextFill(Color.GREEN);
-            labelError.setText("Successfully created, press back and login.");
+
         } catch (Exception e) {
-            labelError.setTextFill(Color.RED);
-            labelError.setText(e.getMessage());
         }
     }
 }

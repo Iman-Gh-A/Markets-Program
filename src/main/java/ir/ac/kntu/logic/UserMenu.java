@@ -1,4 +1,4 @@
-package ir.ac.kntu.menu;
+package ir.ac.kntu.logic;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
@@ -99,7 +99,7 @@ public class UserMenu{
         borderPane.setCenter(hBox);
         saveButton.setOnAction(Event ->{
             try {
-                User tempUser = new User(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234",addressField.getText().trim(),phoneField.getText().trim());
+                User tempUser = new User(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234",addressField.getText().trim(),phoneField.getText().trim(), account.isSpecialAccount());
                 engine.getAccountService().updateUser(account,tempUser,passwordField.getText());
                 labelError.setTextFill(Color.GREEN);
                 labelError.setText("Successfully Change");

@@ -1,4 +1,4 @@
-package ir.ac.kntu.menu;
+package ir.ac.kntu.logic;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
@@ -10,11 +10,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.io.IOException;
 
 public class LoginMenu {
     private final Engine engine;

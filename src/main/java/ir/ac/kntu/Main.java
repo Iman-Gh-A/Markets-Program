@@ -1,7 +1,7 @@
 package ir.ac.kntu;
 
 import ir.ac.kntu.engine.Engine;
-import ir.ac.kntu.menu.LoginMenu;
+import ir.ac.kntu.logic.LoginMenu;
 import ir.ac.kntu.model.classes.markets.FruitShop;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.markets.Restaurant;
@@ -19,7 +19,6 @@ import ir.ac.kntu.util.RandomHelper;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -68,7 +67,7 @@ public class Main extends Application {
     }
 
     private void createFakeAccounts(Engine engine) {
-        Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh","Iran-Tehran","09-207-410-787");
+        Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh","Iran-Tehran","09-207-410-787", false);
         Account adminTemp1 = new Admin("2222222222","Admin", "admin", "admin");
         Account managerTemp1 = new Manager("3333333333","Ali Emami Manager", "ali", "alie");
         engine.getAccountService().addAccount(userTemp1);

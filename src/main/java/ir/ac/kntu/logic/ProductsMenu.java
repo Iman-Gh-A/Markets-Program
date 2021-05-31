@@ -1,4 +1,4 @@
-package ir.ac.kntu.menu;
+package ir.ac.kntu.logic;
 
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.Order;

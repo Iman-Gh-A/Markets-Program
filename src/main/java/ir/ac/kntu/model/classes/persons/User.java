@@ -2,7 +2,6 @@ package ir.ac.kntu.model.classes.persons;
 
 import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.Order;
-import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.enums.AccountType;
 
 import java.lang.IllegalArgumentException;
@@ -15,9 +14,11 @@ public class User extends Account {
     private String phone;
     private final ArrayList<Order> orders;
     private final ArrayList<Comment> comments;
+    private boolean specialAccount;
 
-    public User(String id, String name, String username, String password, String address, String phone) {
+    public User(String id, String name, String username, String password, String address, String phone, boolean specialAccount) {
         super(id, name, username, password, AccountType.USER);
+        this.specialAccount = specialAccount;
         setPhone(phone);
         setAddress(address);
         orders = new ArrayList<>();
@@ -36,6 +37,14 @@ public class User extends Account {
             throw new IllegalArgumentException("The address shouldn't be blank.");
         }
         this.address = address;
+    }
+
+    public boolean isSpecialAccount() {
+        return specialAccount;
+    }
+
+    public void setSpecialAccount(boolean specialAccount) {
+        this.specialAccount = specialAccount;
     }
 
     public String getPhone() {

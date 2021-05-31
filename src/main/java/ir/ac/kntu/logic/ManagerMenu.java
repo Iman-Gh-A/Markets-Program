@@ -1,10 +1,8 @@
-package ir.ac.kntu.menu;
+package ir.ac.kntu.logic;
 
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.enums.AccountType;
-
-import java.io.IOException;
 
 public class ManagerMenu {
     private final Account account;
