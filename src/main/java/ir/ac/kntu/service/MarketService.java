@@ -1,8 +1,11 @@
 package ir.ac.kntu.service;
 
 import ir.ac.kntu.model.classes.markets.Market;
+import ir.ac.kntu.model.classes.markets.Restaurant;
+import ir.ac.kntu.model.classes.markets.ScheduleMarket;
 import ir.ac.kntu.model.enums.MarketType;
 
+import javax.print.DocFlavor;
 import java.util.ArrayList;
 
 public class MarketService {
@@ -38,6 +41,22 @@ public class MarketService {
             }
         }
         return marketsContainName;
+    }
+
+    public void updateMarket(Market oldMarket, Market editedMarket) {
+        oldMarket.setName(editedMarket.getName());
+        oldMarket.setAddress(editedMarket.getAddress());
+        if (oldMarket.getMarketType().equals(MarketType.RESTAURANT)) {
+            Restaurant old = (Restaurant) oldMarket;
+            Restaurant edited = (Restaurant) editedMarket;
+            old.setType(edited.getType());
+            old.setWorkHour(edited.getWorkHour());
+        } else {
+            ScheduleMarket old = (ScheduleMarket) oldMarket;
+            ScheduleMarket edited = (ScheduleMarket) editedMarket;
+            old.setStartEndSchedule(edited.getStartTime(), edited.getEndTime());
+            old.setCapacity(edited.getCapacity());
+        }
     }
 
 }

@@ -18,7 +18,7 @@ public class Restaurant extends Market {
     }
 
     public void setWorkHour(String workHour) {
-        if (workHour.matches("\\s+")) {
+        if (workHour.matches("")) {
             throw new IllegalArgumentException("\tThe weekly work hour shouldn't be blank.");
         }
         this.workHour = workHour;

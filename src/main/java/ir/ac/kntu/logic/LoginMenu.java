@@ -40,7 +40,7 @@ public class LoginMenu {
         Label labelErrors = new Label();
         Button signInButton = new Button("Sign in");
         Button signUpButton = new Button("Sign up");
-        HBox hBoxButton = new HBox(signUpButton,signInButton);
+        HBox hBoxButton = new HBox(signInButton,signUpButton);
         hBoxButton.setSpacing(30);
         hBoxButton.setAlignment(Pos.CENTER);
         VBox vBox = new VBox(hBox,labelErrors,hBoxButton);

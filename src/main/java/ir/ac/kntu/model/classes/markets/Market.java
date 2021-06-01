@@ -57,7 +57,7 @@ public class Market {
     }
 
     public void setAddress(String address) {
-        if (address.matches("\\s+")) {
+        if (address.matches("")) {
             throw new IllegalArgumentException("The address shouldn't be blank.");
         }
         this.address = address;
