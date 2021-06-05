@@ -11,13 +11,9 @@ public class Delivery extends Person {
     private VehicleType vehicleType;
     private final ArrayList<Order> orders;
 
-    public Delivery(String name, String id, String vehicleType) {
+    public Delivery(String name, String id, VehicleType vehicleType) {
         super(name, id);
-        vehicleType = vehicleType.toUpperCase();
-        if ( (!vehicleType.matches("CAR") && !vehicleType.matches("MOTOR") )) {
-            throw new IllegalArgumentException("\tError: The vehicle type should be between Car or MOTOR");
-        }
-        this.vehicleType = VehicleType.valueOf(vehicleType);
+        this.vehicleType = vehicleType;
         orders = new ArrayList<>();
     }
 
@@ -31,6 +27,10 @@ public class Delivery extends Person {
 
     public VehicleType getVehicleType() {
         return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     @Override

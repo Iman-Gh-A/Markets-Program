@@ -1,6 +1,5 @@
 package ir.ac.kntu.model.classes.markets;
 
-import ir.ac.kntu.model.classes.persons.Delivery;
 import ir.ac.kntu.model.enums.MarketType;
 import ir.ac.kntu.util.ComparatorHelper;
 
@@ -12,13 +11,11 @@ public class ScheduleMarket extends Market{
 
     private Integer startTime;
     private Integer endTime;
-    private final ArrayList<Delivery> deliveries;
 
     public ScheduleMarket(String name, String address,MarketType marketType, Integer startTime, Integer endTime, int capacity) {
         super(name, address, marketType);
         setCapacity(capacity);
         setStartEndSchedule(startTime,endTime);
-        deliveries = new ArrayList<>();
     }
 
     public void setStartEndSchedule(Integer startTime, Integer endTime) {
@@ -49,9 +46,5 @@ public class ScheduleMarket extends Market{
 
     public Integer getEndTime() {
         return endTime;
-    }
-
-    public ArrayList<Delivery> getDeliveries() {
-        return (ArrayList<Delivery>) deliveries.clone();
     }
 }

@@ -70,28 +70,40 @@ public class Main extends Application {
         Account userTemp1 = new User("1111111111","Iman Ghasemi Arani", "iman", "imangh","Iran-Tehran","09-207-410-787", false);
         Account adminTemp1 = new Admin("2222222222","Admin", "admin", "admin");
         Account managerTemp1 = new Manager("3333333333","Ali Emami Manager", "ali", "alie");
+        Account managerTemp2 = new Manager("4444444444","Reza Emami Manager", "Temp", "1234");
         engine.getAccountService().addAccount(userTemp1);
         engine.getAccountService().addAccount(adminTemp1);
         engine.getAccountService().addAccount(managerTemp1);
-    }
-
-    private void createFakeRestaurants(Engine engine) {
+        engine.getAccountService().addAccount(managerTemp2);
         Market restaurantTemp1 = new Restaurant("Yas","Iran-Tehran", RestaurantType.MEDIUM,"sunday");
-        Market restaurantTemp2 = new Restaurant("Paris","Iran-Tehran", RestaurantType.LUXURY,"saturday");
-        Market restaurantTemp3 = new Restaurant("Baradaran","Iran-Tehran", RestaurantType.ECONOMIC,"monday sunday friday");
-        Market restaurantTemp4 = new Restaurant("Yasian","Iran-Tehran", RestaurantType.LUXURY,"monday sunday friday");
         engine.getMarketService().addMarket(restaurantTemp1);
-        engine.getMarketService().addMarket(restaurantTemp2);
-        engine.getMarketService().addMarket(restaurantTemp3);
-        engine.getMarketService().addMarket(restaurantTemp4);
         Product foodTemp1 = new Food("Kabab",20000.0);
-        Product foodTemp2 = new Food("Joje",25000.0);
         Product foodTemp3 = new Food("Pasta",15000.0);
-        Product foodTemp4 = new Food("Morgh",30000.0);
         Product foodTemp5 = new Food("soop",10000.0);
         restaurantTemp1.addProduct(foodTemp1);
         restaurantTemp1.addProduct(foodTemp3);
         restaurantTemp1.addProduct(foodTemp5);
+        ((Manager)managerTemp1).setMarket(restaurantTemp1);
+        Market superTemp1 = new SuperMarket("shabanehrozzy poonak", "iran-tehran-poonak",8,20, 2);
+        engine.getMarketService().addMarket(superTemp1);
+        Product superProductTemp1 = new SuperProduct("Mast",14000.0,20);
+        Product superProductTemp3 = new SuperProduct("Adams",25000.0,10);
+        Product superProductTemp5 = new SuperProduct("pofak",10000.0,0);
+        superTemp1.addProduct(superProductTemp1);
+        superTemp1.addProduct(superProductTemp3);
+        superTemp1.addProduct(superProductTemp5);
+        ((Manager)managerTemp2).setMarket(superTemp1);
+    }
+
+    private void createFakeRestaurants(Engine engine) {
+        Market restaurantTemp2 = new Restaurant("Paris","Iran-Tehran", RestaurantType.LUXURY,"saturday");
+        Market restaurantTemp3 = new Restaurant("Baradaran","Iran-Tehran", RestaurantType.ECONOMIC,"monday sunday friday");
+        Market restaurantTemp4 = new Restaurant("Yasian","Iran-Tehran", RestaurantType.LUXURY,"monday sunday friday");
+        engine.getMarketService().addMarket(restaurantTemp2);
+        engine.getMarketService().addMarket(restaurantTemp3);
+        engine.getMarketService().addMarket(restaurantTemp4);
+        Product foodTemp2 = new Food("Joje",25000.0);
+        Product foodTemp4 = new Food("Morgh",30000.0);
         restaurantTemp2.addProduct(foodTemp2);
         restaurantTemp2.addProduct(foodTemp4);
         for (int i = 0; i < RandomHelper.getRandomInt(10,100); i++) {
@@ -118,23 +130,15 @@ public class Main extends Application {
     }
 
     private void createFakeSuperMarkets(Engine engine) {
-        Market superTemp1 = new SuperMarket("shabanehrozzy poonak", "iran-tehran-poonak",8,20, 2);
         Market superTemp2 = new SuperMarket("darbar", "iran-tehran", 5,20, 3);
         Market superTemp3 = new SuperMarket("Azadi", "iran", 12,20, 4);
         Market superTemp4 = new SuperMarket("iran", "iran-tehran", 19,20, 5);
-        engine.getMarketService().addMarket(superTemp1);
         engine.getMarketService().addMarket(superTemp2);
         engine.getMarketService().addMarket(superTemp3);
         engine.getMarketService().addMarket(superTemp4);
-        Product superProductTemp1 = new SuperProduct("Mast",14000.0,20);
         Product superProductTemp2 = new SuperProduct("Paneer",7000.0,15);
-        Product superProductTemp3 = new SuperProduct("Adams",25000.0,10);
         Product superProductTemp4 = new SuperProduct("Sheer",10000.0,30);
-        Product superProductTemp5 = new SuperProduct("pofak",10000.0,0);
         Product superProductTemp6 = new SuperProduct("Chips",12000.0,2);
-        superTemp1.addProduct(superProductTemp1);
-        superTemp1.addProduct(superProductTemp3);
-        superTemp1.addProduct(superProductTemp5);
         superTemp2.addProduct(superProductTemp2);
         superTemp2.addProduct(superProductTemp6);
         superTemp3.addProduct(superProductTemp4);

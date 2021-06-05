@@ -3,6 +3,7 @@ package ir.ac.kntu.model.classes.persons;
 import ir.ac.kntu.model.classes.Order;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.enums.OrderStatus;
+import ir.ac.kntu.model.enums.VehicleType;
 
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class DeliveryForRestaurant extends Delivery{
     private Market market1;
     private Market market2;
 
-    public DeliveryForRestaurant(String name, String id, String vehicleType, String weeklySchedule) {
+    public DeliveryForRestaurant(String name, String id, VehicleType vehicleType, String weeklySchedule) {
         super(name, id, vehicleType);
         setWeeklySchedule(weeklySchedule);
     }
@@ -55,13 +56,13 @@ public class DeliveryForRestaurant extends Delivery{
             market1 = order.getMarket();
             order.setDelivery(this);
             addOrder(order);
-            order.updateStatus();
+            order.updateStatus(null);
             return true;
         } else if (market2 == null) {
             market2 = order.getMarket();
             order.setDelivery(this);
             addOrder(order);
-            order.updateStatus();
+            order.updateStatus(null);
             return true;
         }
         return false;

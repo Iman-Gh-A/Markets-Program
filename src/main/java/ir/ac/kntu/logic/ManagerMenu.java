@@ -2,20 +2,31 @@ package ir.ac.kntu.logic;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
+import ir.ac.kntu.model.classes.Comment;
+import ir.ac.kntu.model.classes.Order;
 import ir.ac.kntu.model.classes.markets.*;
 import ir.ac.kntu.model.classes.persons.Account;
+import ir.ac.kntu.model.classes.persons.Delivery;
 import ir.ac.kntu.model.classes.persons.Manager;
-import ir.ac.kntu.model.enums.AccountType;
-import ir.ac.kntu.model.enums.MarketType;
-import ir.ac.kntu.model.enums.RestaurantType;
+import ir.ac.kntu.model.classes.products.Food;
+import ir.ac.kntu.model.classes.products.Fruit;
+import ir.ac.kntu.model.classes.products.Product;
+import ir.ac.kntu.model.classes.products.SuperProduct;
+import ir.ac.kntu.model.enums.*;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class ManagerMenu {
@@ -58,7 +69,7 @@ public class ManagerMenu {
             }
         });
         manageMarketButton.setOnAction(Event ->{
-//            borderPane.setCenter();
+            borderPane.setCenter(manageMarket());
         });
         exitButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
 
@@ -115,11 +126,11 @@ public class ManagerMenu {
         Pane pane = new Pane(topLabel,labelError);
         pane.setPrefHeight(100);
         borderPane.setTop(pane);
-        borderPane.setCenter(centerBorderPaneForCreate(labelError));
+        borderPane.setCenter(centerBorderPaneForCreateMarket(labelError));
         return borderPane;
     }
 
-    private Pane centerBorderPaneForCreate(Label labelError) {
+    private Pane centerBorderPaneForCreateMarket(Label labelError) {
         Label labelName = new Label("Market's Name:");
         Label labelAddress = new Label("Address:");
         Label labelMarketType = new Label("Market's type");
@@ -236,21 +247,24 @@ public class ManagerMenu {
             ScheduleMarket temp = (ScheduleMarket) account.getMarket();
             startTime.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22);
             startTime.setValue(temp.getStartTime());
-            startTime.setValue(temp.getEndTime());
+            IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
+            endTime.setValue(temp.getEndTime());
             choiceBoxCapacity.getItems().addAll(2,3,4,5,6,7,8,9,10);
             choiceBoxCapacity.setValue(temp.getCapacity());
             HBox tempHBox = new HBox(new Label("The Start Time of market is"),startTime,new Label("and the end Time is"),endTime);
             tempHBox.setSpacing(10);
             VBox tempVBox = new VBox(tempHBox,new HBox(new Label("Capacity"),choiceBoxCapacity));
             hBoxTemp.getChildren().addAll(tempVBox);
-            startTime.setOnAction(Event-> {
-                endTime.getItems().clear();
-                IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
-            });
+            startTime.setOnAction(Event-> startTimeHandler(endTime,startTime));
         }
         TextField finalWorkHourField = workHourField;
         saveButton.setOnAction(Event-> saveButtonHandler(labelError, new ChoiceBox[]{choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity}, new TextField[]{nameField,addressField,finalWorkHourField}));
         return borderPane;
+    }
+
+    private void startTimeHandler(ChoiceBox<Integer> endTime, ChoiceBox<Integer> startTime) {
+        endTime.getItems().clear();
+        IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
     }
 
     private void saveButtonHandler(Label labelError,ChoiceBox[] choiceBoxes,TextField[] textFields) {
@@ -271,4 +285,202 @@ public class ManagerMenu {
             labelError.setText(e.getMessage());
         }
     }
+
+    private Pane manageMarket() {
+        BorderPane borderPane = new BorderPane();
+        BorderPane borderPaneInner = new BorderPane();
+        ListView<VBox> listViewOrders = new ListView<>();
+        listViewOrders.setPlaceholder(new Label("Nothing"));
+        listViewOrders.setPrefHeight(140);
+        Label labelError = new Label("");
+        for (Order currentOrder : account.getMarket().getOrders()) {
+            if (!currentOrder.getStatus().equals(OrderStatus.DELIVERED)) {
+                Button changeStatus = new Button("Change status to next step");
+                changeStatus.setOnAction(e-> labelError.setText(currentOrder.updateStatus(account.getMarket().getDeliveries().size() > 0 ? account.getMarket().getDeliveries().get(new Random().nextInt(account.getMarket().getDeliveries().size())) : null)));
+                listViewOrders.getItems().add(new VBox(new Label(currentOrder.toString()),changeStatus));
+            } else {
+                listViewOrders.getItems().add(new VBox(new Label(currentOrder.toString())));
+            }
+        }
+        VBox vBoxOrderHistory = new VBox(new HBox(new Label("Order History"),labelError),listViewOrders,new Label());
+        borderPaneInner.setTop(vBoxOrderHistory);
+        ListView<Product> listViewProducts = new ListView<>();
+        listViewProducts.setPlaceholder(new Label("Nothing"));
+        listViewProducts.setPrefHeight(110);
+        listViewProducts.getItems().addAll(account.getMarket().getProducts());
+        Button addProductButton = new Button("add Product");
+        Button seeCommentsButton = new Button("Comments");
+        VBox vBoxProduct = new VBox(new Label("Products"),listViewProducts,new HBox(seeCommentsButton,addProductButton),new Label());
+        borderPaneInner.setCenter(vBoxProduct);
+        ListView<Delivery> listViewDeliveries = new ListView<>();
+        listViewDeliveries.setPlaceholder(new Label("Nothing"));
+        listViewDeliveries.setPrefHeight(110);
+        listViewDeliveries.getItems().addAll(account.getMarket().getDeliveries());
+        Button addDeliveryButton = new Button("add Delivery");
+        Button editDeliveryButton = new Button("Edit Delivery");
+        VBox vBoxDelivery = new VBox(new Label("Deliveries"),listViewDeliveries,new HBox(addDeliveryButton,editDeliveryButton),new Label());
+        borderPaneInner.setBottom(vBoxDelivery);
+        borderPane.setCenter(borderPaneInner);
+        Button backButton = new Button("Back");
+        borderPane.setBottom(backButton);
+        editDeliveryButton.setOnAction(e-> {
+            if (listViewDeliveries.getSelectionModel().getSelectedItems().size() > 0) {
+                borderPaneInner.setBottom(editDeliveryButtonHandler(listViewDeliveries.getSelectionModel().getSelectedItems().get(0)));
+            }
+        });
+        addProductButton.setOnAction(e-> borderPaneInner.setCenter(addProductButtonHandler()));
+        addDeliveryButton.setOnAction(e-> borderPaneInner.setBottom(addDeliveryButtonHandler()));
+        seeCommentsButton.setOnAction(e-> seeCommentsButtonPressed(listViewProducts.getSelectionModel().getSelectedItems()));
+        backButton.setOnAction(e-> backButtonHandler(new ListView[]{listViewProducts,listViewDeliveries},new VBox[]{vBoxOrderHistory,vBoxProduct,vBoxDelivery},borderPaneInner));
+        return borderPane;
+    }
+
+    private void backButtonHandler(ListView[] listViews, VBox[] vBoxes,BorderPane borderPaneInner) {
+        borderPaneInner.setTop(vBoxes[0]);
+        borderPaneInner.setCenter(vBoxes[1]);
+        listViews[0].getItems().clear();
+        listViews[0].getItems().addAll(account.getMarket().getProducts());
+        borderPaneInner.setBottom(vBoxes[2]);
+        listViews[1].getItems().clear();
+        listViews[1].getItems().addAll(account.getMarket().getDeliveries());
+    }
+
+    private void seeCommentsButtonPressed(ObservableList<Product> temp) {
+        if (temp.size() != 0) {
+            Stage commentStage = new Stage();
+            BorderPane borderPane = new BorderPane();
+            ListView<Comment> listView = new ListView<>();
+            listView.setPlaceholder(new Label("Nothing"));
+            listView.setPrefWidth(500);
+            listView.getItems().addAll(temp.get(0).getComments());
+            borderPane.setCenter(listView);
+            commentStage.setScene(new Scene(borderPane));
+            commentStage.show();
+        }
+    }
+
+    private Pane addProductButtonHandler() {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(new Label("add Product"));
+        TextField productNameField = new TextField();
+        productNameField.setPromptText("name");
+        Spinner<Double> costSpinner = new Spinner<>(1000.0,10000000.0,1000,500);
+        Button addButton = new Button("add");
+        Label labelError = new Label("");
+        VBox leftLeftVBox;
+        VBox leftVBox;
+        Spinner<Integer> counterSpinner = new Spinner<>();
+        if (!account.getMarket().getMarketType().equals(MarketType.RESTAURANT)) {
+            counterSpinner = new Spinner<>(0,10000,5,5);
+            leftLeftVBox = new VBox(new Label("Product' name:"), new Label("Number of Product:"));
+            leftVBox = new VBox(productNameField,counterSpinner);
+        } else {
+            leftLeftVBox = new VBox(new Label("Product' name:"));
+            leftVBox= new VBox(productNameField);
+        }
+        VBox rightVBox = new VBox(new Label("Cost:"));
+        VBox rightRightVBox = new VBox(costSpinner,new HBox(addButton,labelError));
+        leftLeftVBox.setSpacing(23);
+        leftVBox.setSpacing(10);
+        rightRightVBox.setSpacing(10);
+        rightVBox.setSpacing(23);
+        HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
+        hBox.setSpacing(5);
+        borderPane.setCenter(hBox);
+        Spinner<Integer> finalCounterSpinner = counterSpinner;
+        addButton.setOnAction(e-> {
+            try {
+                Product newProduct;
+                if (account.getMarket().getMarketType().equals(MarketType.RESTAURANT)) {
+                    newProduct = new Food(productNameField.getText().trim(),costSpinner.getValue());
+                } else if (account.getMarket().getMarketType().equals(MarketType.SUPER)) {
+                    newProduct = new SuperProduct(productNameField.getText().trim(),costSpinner.getValue(), finalCounterSpinner.getValue());
+                } else {
+                    newProduct = new Fruit(productNameField.getText().trim(),costSpinner.getValue(), finalCounterSpinner.getValue());
+                }
+                account.getMarket().addProduct(newProduct);
+                labelError.setTextFill(Color.GREEN);
+                labelError.setText("added "+newProduct.getName());
+            } catch (Exception exception) {
+                labelError.setTextFill(Color.RED);
+                labelError.setText(exception.getMessage());
+            }
+        });
+        return borderPane;
+    }
+
+    private Pane addDeliveryButtonHandler() {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(new Label("add Delivery"));
+        Label labelError = new Label("");
+        TextField deliveryNameField = new TextField();
+        deliveryNameField.setPromptText("name");
+        TextField idField = new TextField();
+        idField.setPromptText("id");
+        ChoiceBox<VehicleType> vehicleTypeChoiceBox = new ChoiceBox<>();
+        vehicleTypeChoiceBox.getItems().addAll(VehicleType.values());
+        vehicleTypeChoiceBox.setValue(VehicleType.MOTOR);
+        Button addButton = new Button("add");
+        VBox leftLeftVBox = new VBox(new Label("Name:"),new Label("Vehicle's Type"),new Label(),new Label());
+        VBox leftVBox = new VBox(deliveryNameField,vehicleTypeChoiceBox);
+        VBox rightVBox = new VBox(new Label("ID:"));
+        VBox rightRightVBox = new VBox(idField,new HBox(addButton,labelError));
+        leftLeftVBox.setSpacing(23);
+        leftVBox.setSpacing(10);
+        rightVBox.setSpacing(23);
+        rightRightVBox.setSpacing(10);
+        HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
+        borderPane.setCenter(hBox);
+        hBox.setSpacing(5);
+        addButton.setOnAction(e-> {
+            try {
+                Delivery newDelivery = new Delivery(deliveryNameField.getText().trim(),idField.getText().trim(),vehicleTypeChoiceBox.getValue());
+                account.getMarket().addDelivery(newDelivery);
+                labelError.setTextFill(Color.GREEN);
+                labelError.setText("added " + newDelivery.getName());
+            } catch (Exception exception) {
+                labelError.setTextFill(Color.RED);
+                labelError.setText(exception.getMessage());
+            }
+        });
+        return borderPane;
+    }
+
+    private Pane editDeliveryButtonHandler(Delivery delivery) {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(new Label("edit Delivery"));
+        Label labelError = new Label("");
+        TextField deliveryNameField = new TextField(delivery.getName());
+        deliveryNameField.setPromptText("name");
+        TextField idField = new TextField(delivery.getId());
+        idField.setPromptText("id");
+        ChoiceBox<VehicleType> vehicleTypeChoiceBox = new ChoiceBox<>();
+        vehicleTypeChoiceBox.getItems().addAll(VehicleType.values());
+        vehicleTypeChoiceBox.setValue(delivery.getVehicleType());
+        Button addButton = new Button("Save");
+        VBox leftLeftVBox = new VBox(new Label("Name:"),new Label("Vehicle's Type"),new Label(),new Label());
+        VBox leftVBox = new VBox(deliveryNameField,vehicleTypeChoiceBox);
+        VBox rightVBox = new VBox(new Label("ID:"));
+        VBox rightRightVBox = new VBox(idField,new HBox(addButton,labelError));
+        leftLeftVBox.setSpacing(23);
+        leftVBox.setSpacing(10);
+        rightVBox.setSpacing(23);
+        rightRightVBox.setSpacing(10);
+        HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
+        borderPane.setCenter(hBox);
+        hBox.setSpacing(5);
+        addButton.setOnAction(e-> {
+            try {
+                Delivery newDelivery = new Delivery(deliveryNameField.getText().trim(),idField.getText().trim(),vehicleTypeChoiceBox.getValue());
+                account.getMarket().updateDelivery(delivery,newDelivery);
+                labelError.setTextFill(Color.GREEN);
+                labelError.setText("updated");
+            } catch (Exception exception) {
+                labelError.setTextFill(Color.RED);
+                labelError.setText(exception.getMessage());
+            }
+        });
+        return borderPane;
+    }
+
 }

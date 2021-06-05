@@ -30,7 +30,7 @@ public class Order {
         this.deliveryTime = deliveryTime;
         cost = calculateCost();
         comment = null;
-        updateStatus();
+        updateStatus(null);
     }
 
     private Double calculateCost() {
@@ -78,13 +78,22 @@ public class Order {
         return user;
     }
 
-    public void updateStatus() {
-        if (status == null) {
-            status = OrderStatus.PROCESSING;
-        }else if (status.equals(OrderStatus.PROCESSING)) {
-            status = OrderStatus.SENDING;
-        } else if (status.equals(OrderStatus.SENDING)) {
-            status = OrderStatus.DELIVERED;
+    public String updateStatus(Delivery selectedDelivery) {
+        try {
+            if (status == null) {
+                status = OrderStatus.PROCESSING;
+            }else if (status.equals(OrderStatus.PROCESSING)) {
+                if (selectedDelivery == null) {
+                    throw new IllegalArgumentException("There isn't found any Delivery.");
+                }
+                setDelivery(selectedDelivery);
+                status = OrderStatus.SENDING;
+            } else if (status.equals(OrderStatus.SENDING)) {
+                status = OrderStatus.DELIVERED;
+            }
+            return "Successful";
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 

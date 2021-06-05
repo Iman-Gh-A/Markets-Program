@@ -15,6 +15,7 @@ public class OrderService {
     public void addOrder(Order newOrder) {
         orders.add(newOrder);
         newOrder.getUser().addOrder(newOrder);
+        newOrder.getMarket().addOrder(newOrder);
     }
 
     public Double calculateCostOfOrder(Order order, int num) {

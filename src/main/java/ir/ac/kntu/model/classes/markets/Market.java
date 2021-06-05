@@ -1,6 +1,8 @@
 package ir.ac.kntu.model.classes.markets;
 
 import ir.ac.kntu.model.classes.Comment;
+import ir.ac.kntu.model.classes.Order;
+import ir.ac.kntu.model.classes.persons.Delivery;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.MarketType;
 
@@ -14,7 +16,9 @@ public class Market {
     private Double rate;
     private final MarketType marketType;
     private final ArrayList<Product> products;
+    private final ArrayList<Order> orders;
     private final ArrayList<Comment> comments;
+    private final ArrayList<Delivery> deliveries;
     private ArrayList<Map.Entry<String,Integer>> schedule;
     private int commentsNum;
     private boolean status;
@@ -25,10 +29,12 @@ public class Market {
         setAddress(address);
         this.rate = 2.5;
         this.marketType = marketType;
-        this.products = new ArrayList<>();
-        this.comments = new ArrayList<>();
+        products = new ArrayList<>();
+        comments = new ArrayList<>();
+        orders = new ArrayList<>();
         commentsNum = 0;
         this.status = true;
+        deliveries = new ArrayList<>();
     }
 
     public void addComment(Comment comment) {
@@ -39,6 +45,10 @@ public class Market {
 
     public void addProduct(Product product) {
         products.add(product);
+    }
+
+    public void addDelivery(Delivery delivery) {
+        deliveries.add(delivery);
     }
 
     public void setName(String name) {
@@ -125,6 +135,24 @@ public class Market {
             }
         }
         return availableSchedule;
+    }
+
+    public void addOrder(Order newOrder) {
+        orders.add(newOrder);
+    }
+
+    public ArrayList<Order> getOrders() {
+        return (ArrayList<Order>) orders.clone();
+    }
+
+    public ArrayList<Delivery> getDeliveries() {
+        return (ArrayList<Delivery>) deliveries.clone();
+    }
+
+    public void updateDelivery(Delivery oldDelivery, Delivery editedDelivery) {
+        oldDelivery.setName(editedDelivery.getName());
+        oldDelivery.setId(editedDelivery.getId());
+        oldDelivery.setVehicleType(editedDelivery.getVehicleType());
     }
 
     @Override
