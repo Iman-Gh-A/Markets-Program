@@ -17,7 +17,7 @@ public class Product {
 
     public Product(String name, Double cost, int availability, ProductType productType) {
         if (!name.matches("[a-zA-Z\\s]+")) {
-            throw new IllegalArgumentException("The name should be a-z and A-Z");
+            throw new IllegalArgumentException("The name of Product should be a-z and A-Z ");
         }
         this.name = name;
         this.cost = cost;

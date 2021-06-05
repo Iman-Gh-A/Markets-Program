@@ -62,4 +62,18 @@ public class Account extends Person {
     public int hashCode() {
         return Objects.hash(getUsername(), getPassword(), getAccountType());
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "Account{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", accountType=" + accountType +
+                '}';
+    }
+
+    public String toStringForKnow() {
+        return  getAccountType() + " " + getUsername() + " " + getPassword();
+    }
 }

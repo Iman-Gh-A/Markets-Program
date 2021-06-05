@@ -296,7 +296,7 @@ public class ManagerMenu {
         for (Order currentOrder : account.getMarket().getOrders()) {
             if (!currentOrder.getStatus().equals(OrderStatus.DELIVERED)) {
                 Button changeStatus = new Button("Change status to next step");
-                changeStatus.setOnAction(e-> labelError.setText(currentOrder.updateStatus(account.getMarket().getDeliveries().size() > 0 ? account.getMarket().getDeliveries().get(new Random().nextInt(account.getMarket().getDeliveries().size())) : null)));
+                changeStatus.setOnAction(e-> labelError.setText("\t" + currentOrder.updateStatus(account.getMarket().getDeliveries().size() > 0 ? account.getMarket().getDeliveries().get(new Random().nextInt(account.getMarket().getDeliveries().size())) : null)));
                 listViewOrders.getItems().add(new VBox(new Label(currentOrder.toString()),changeStatus));
             } else {
                 listViewOrders.getItems().add(new VBox(new Label(currentOrder.toString())));

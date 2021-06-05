@@ -20,7 +20,7 @@ public class Person {
 
     public void setName(String name) {
         if (!name.matches("[a-zA-Z\\s]+")) {
-            throw new IllegalArgumentException("The name should be a-z and A-Z");
+            throw new IllegalArgumentException("The name of Person should be a-z and A-Z");
         }
         this.name = name;
     }

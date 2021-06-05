@@ -1,20 +1,20 @@
 package ir.ac.kntu;
 
+import com.devskiller.jfairy.producer.company.Company;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.logic.LoginMenu;
 import ir.ac.kntu.model.classes.markets.FruitShop;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.markets.Restaurant;
 import ir.ac.kntu.model.classes.markets.SuperMarket;
-import ir.ac.kntu.model.classes.persons.Account;
-import ir.ac.kntu.model.classes.persons.Admin;
-import ir.ac.kntu.model.classes.persons.Manager;
-import ir.ac.kntu.model.classes.persons.User;
+import ir.ac.kntu.model.classes.persons.*;
 import ir.ac.kntu.model.classes.products.Food;
 import ir.ac.kntu.model.classes.products.Fruit;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.classes.products.SuperProduct;
+import ir.ac.kntu.model.enums.AccountType;
 import ir.ac.kntu.model.enums.RestaurantType;
+import ir.ac.kntu.model.enums.VehicleType;
 import ir.ac.kntu.util.RandomHelper;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -25,6 +25,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import com.devskiller.jfairy.Fairy;
+import com.devskiller.jfairy.producer.person.Person;
+
+import java.util.Random;
 
 
 public class Main extends Application {
@@ -40,14 +44,19 @@ public class Main extends Application {
         Engine engine = new Engine();
         LoginMenu loginMenu = new LoginMenu(engine);
         Button startButton = new Button("Start");
+        Button createButton = new Button("Create");
         ProgressIndicator pb = new ProgressIndicator();
-        startButton.setOnAction(Event-> {
-            createFakeObject(engine);
-            loginMenu.getLoginPain();
-        });
+
+        startButton.setOnAction(Event-> loginMenu.getLoginPain());
 
         BorderPane borderPane = new BorderPane();
-        VBox vBox = new VBox(startButton,pb);
+        VBox vBox = new VBox(createButton,startButton,pb);
+
+        createButton.setOnAction(e-> {
+            createFakeObject(engine);
+            pb.setProgress(1);
+        });
+
         vBox.setAlignment(Pos.CENTER);
         borderPane.setCenter(vBox);
         Scene scene = new Scene(borderPane,700,500);
@@ -61,9 +70,10 @@ public class Main extends Application {
 
     private void createFakeObject(Engine engine) {
         createFakeAccounts(engine);
-        createFakeRestaurants(engine);
-        createFakeSuperMarkets(engine);
-        createFakeFruitShops(engine);
+//        createFakeRestaurants(engine);
+//        createFakeSuperMarkets(engine);
+//        createFakeFruitShops(engine);
+        createFakeObjectBig(engine);
     }
 
     private void createFakeAccounts(Engine engine) {
@@ -183,4 +193,85 @@ public class Main extends Application {
         }
     }
 
+    public void createFakeObjectBig(Engine engine) {
+
+        for (int i = 0; i < RandomHelper.getRandomInt(30,10000); i++) {
+            Person fairyPerson = Fairy.create().person();
+            Account newAccountFake;
+            switch (new Random().nextInt(3)) {
+                case 0:
+                    newAccountFake = new Admin(RandomHelper.getRandomID(),fairyPerson.getFullName(), fairyPerson.getFirstName(), fairyPerson.getPassword());
+                    break;
+                case 1:
+                    newAccountFake = new User(RandomHelper.getRandomID(),fairyPerson.getFullName(), fairyPerson.getFirstName(), fairyPerson.getPassword(),fairyPerson.getAddress().getAddressLine1(), RandomHelper.getRandomPhone(),new Random().nextBoolean());
+                    break;
+                default:
+                    newAccountFake = new Manager(RandomHelper.getRandomID(),fairyPerson.getFullName(), fairyPerson.getFirstName(), fairyPerson.getPassword());
+                    break;
+            }
+            try {
+                engine.getAccountService().addAccount(newAccountFake);
+                System.out.println(newAccountFake.toStringForKnow());
+                if (newAccountFake.getAccountType().equals(AccountType.MANAGER)) {
+                    Market marketTemp = createMarketFake();
+                    engine.getMarketService().addMarket(marketTemp);
+                    ((Manager)newAccountFake).setMarket(marketTemp);
+                }
+            } catch (Exception e) {
+                i--;
+            }
+
+        }
+    }
+
+    private Market createMarketFake() {
+        Person fairyPerson = Fairy.create().person();
+        Company companyFairy = Fairy.create().company();
+        Market newMarketFake = new Restaurant(companyFairy.getName().trim(), fairyPerson.getAddress().getAddressLine2(),RestaurantType.MEDIUM,"Sunday Monday");
+        switch (new Random().nextInt(2)) {
+            case 0:
+                int temp = RandomHelper.getRandomInt(0,22);
+                newMarketFake = new SuperMarket(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp,RandomHelper.getRandomInt(temp,22),RandomHelper.getRandomInt(1,10));
+                break;
+            case 1:
+                int temp2 = RandomHelper.getRandomInt(0,22);
+                newMarketFake = new FruitShop(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp2,RandomHelper.getRandomInt(temp2,22),RandomHelper.getRandomInt(1,10));
+                break;
+            default:
+                break;
+        }
+        addProductToMarket(newMarketFake);
+        addDeliveryToMarket(newMarketFake);
+        return newMarketFake;
+    }
+
+    private void addProductToMarket(Market market) {
+        switch (market.getMarketType()) {
+            case RESTAURANT:
+                for (int i = 0; i < RandomHelper.getRandomInt(0,10); i++) {
+                    Product product = new Food(Fairy.create().person().getFirstName(),RandomHelper.getRandomCost());
+                    market.addProduct(product);
+                }
+                break;
+            case SUPER:
+                for (int i = 0; i < RandomHelper.getRandomInt(0,10); i++) {
+                    Product product = new SuperProduct(Fairy.create().person().getFirstName(),RandomHelper.getRandomCost(),RandomHelper.getRandomInt(1,1000));
+                    market.addProduct(product);
+                }
+                break;
+            default:
+                for (int i = 0; i < RandomHelper.getRandomInt(0,10); i++) {
+                    Product product = new Fruit(Fairy.create().person().getFirstName(),RandomHelper.getRandomCost(),RandomHelper.getRandomInt(1,1000));
+                    market.addProduct(product);
+                }
+                break;
+        }
+    }
+
+    private void addDeliveryToMarket(Market market) {
+        for (int i = 0; i < RandomHelper.getRandomInt(0,10); i++) {
+            Delivery delivery = new Delivery(Fairy.create().person().getFullName(),RandomHelper.getRandomID(),new Random().nextBoolean() ? VehicleType.CAR : VehicleType.MOTOR);
+            market.addDelivery(delivery);
+        }
+    }
 }
