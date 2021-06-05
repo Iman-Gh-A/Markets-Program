@@ -115,6 +115,11 @@ public class ManagerMenu {
         Pane pane = new Pane(topLabel,labelError);
         pane.setPrefHeight(100);
         borderPane.setTop(pane);
+        borderPane.setCenter(centerBorderPaneForCreate(labelError));
+        return borderPane;
+    }
+
+    private Pane centerBorderPaneForCreate(Label labelError) {
         Label labelName = new Label("Market's Name:");
         Label labelAddress = new Label("Address:");
         Label labelMarketType = new Label("Market's type");
@@ -150,135 +155,120 @@ public class ManagerMenu {
         HBox hBoxTemp = new HBox();
         hBoxTemp.setSpacing(15);
         HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
-        VBox baseVBox = new VBox(hBox,hBoxTemp);
-        baseVBox.setSpacing(10);
-        borderPane.setCenter(baseVBox);
         Button createButton = new Button("Create");
-        borderPane.setBottom(createButton);
-        choiceBoxType.setOnAction(Event-> {
-            if (choiceBoxType.getValue().equals(MarketType.RESTAURANT)) {
-                hBoxTemp.getChildren().clear();
-                hBoxTemp.getChildren().addAll(labelWorkHour,workHourField,labelRestaurantType,choiceBoxRestaurantType);
-            } else {
-                hBoxTemp.getChildren().clear();
-                HBox tempHBox = new HBox(labelStartTime,startTime,labelEndTime,endTime);
-                tempHBox.setSpacing(10);
-                VBox temp = new VBox(tempHBox,new HBox(labelCapacity,choiceBoxCapacity));
-                hBoxTemp.getChildren().addAll(temp);
-            }
-        });
+        VBox baseVBox = new VBox(hBox,hBoxTemp,createButton);
+        baseVBox.setSpacing(10);
+        choiceBoxType.setOnAction(Event-> choiceBoxTypeHandler(hBoxTemp,new Label[]{labelWorkHour,labelRestaurantType,labelStartTime,labelEndTime,labelCapacity},
+                            new ChoiceBox[]{choiceBoxType,choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity},workHourField));
         startTime.setOnAction(Event-> {
             endTime.getItems().clear();
             IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
         });
-        createButton.setOnAction(Event-> {
-            Market newMarket = null;
-            try {
-                if (choiceBoxType.getValue().equals(MarketType.SUPER)) {
-                    newMarket = new SuperMarket(nameField.getText().trim(),addressField.getText().trim(),startTime.getValue(),endTime.getValue(),choiceBoxCapacity.getValue());
-                } else if (choiceBoxType.getValue().equals(MarketType.FRUITSHOP)){
-                    newMarket = new FruitShop(nameField.getText().trim(),addressField.getText().trim(),startTime.getValue(),endTime.getValue(),choiceBoxCapacity.getValue());
-                } else {
-                    newMarket = new Restaurant(nameField.getText().trim(),addressField.getText().trim(),choiceBoxRestaurantType.getValue(),workHourField.getText().trim());
-                }
-                account.setMarket(newMarket);
-                engine.getMarketService().addMarket(newMarket);
-                labelError.setTextFill(Color.GREEN);
-                labelError.setText("Successfully Crested");
-            } catch (Exception e) {
-                labelError.setTextFill(Color.RED);
-                labelError.setText(e.getMessage());
+        createButton.setOnAction(Event-> createButtonHandler(new ChoiceBox[]{choiceBoxType,choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity},
+                            new TextField[]{nameField,addressField,workHourField},labelError));
+        return baseVBox;
+    }
+
+    private void createButtonHandler(ChoiceBox[] choiceBoxes, TextField[] textFields, Label labelError) {
+        Market newMarket = null;
+        try {
+            if (choiceBoxes[0].getValue().equals(MarketType.SUPER)) {
+                newMarket = new SuperMarket(textFields[0].getText().trim(),textFields[1].getText().trim(),(Integer) choiceBoxes[2].getValue(),(Integer) choiceBoxes[3].getValue(),(Integer) choiceBoxes[4].getValue());
+            } else if (choiceBoxes[0].getValue().equals(MarketType.FRUITSHOP)){
+                newMarket = new FruitShop(textFields[0].getText().trim(),textFields[1].getText().trim(),(Integer) choiceBoxes[2].getValue(),(Integer) choiceBoxes[3].getValue(),(Integer) choiceBoxes[4].getValue());
+            } else {
+                newMarket = new Restaurant(textFields[0].getText().trim(),textFields[1].getText().trim(),(RestaurantType) choiceBoxes[1].getValue(),textFields[2].getText().trim());
             }
-        });
-        return borderPane;
+            account.setMarket(newMarket);
+            engine.getMarketService().addMarket(newMarket);
+            labelError.setTextFill(Color.GREEN);
+            labelError.setText("Successfully Crested");
+        } catch (Exception e) {
+            labelError.setTextFill(Color.RED);
+            labelError.setText(e.getMessage());
+        }
+    }
+
+    private void choiceBoxTypeHandler(HBox hBoxTemp,Label[] labels,ChoiceBox[] choiceBoxes,TextField workHourField) {
+        if (choiceBoxes[0].getValue().equals(MarketType.RESTAURANT)) {
+            hBoxTemp.getChildren().clear();
+            hBoxTemp.getChildren().addAll(labels[0],workHourField,labels[1],choiceBoxes[1]);
+        } else {
+            hBoxTemp.getChildren().clear();
+            HBox tempHBox = new HBox(labels[2],choiceBoxes[2],labels[3],choiceBoxes[3]);
+            tempHBox.setSpacing(10);
+            VBox temp = new VBox(tempHBox,new HBox(labels[4],choiceBoxes[4]));
+            hBoxTemp.getChildren().addAll(temp);
+        }
     }
 
     private Pane viewOrEditMarket() {
         BorderPane borderPane = new BorderPane();
-        Label topLabel = new Label("View or edit your market");
-        topLabel.setLayoutY(50);
         Label labelError = new Label("");
-        Pane pane = new Pane(topLabel,labelError);
-        pane.setPrefHeight(100);
-        borderPane.setTop(pane);
-        Label labelName = new Label("Market's Name:");
-        Label labelAddress = new Label("Address:");
-        Label labelMarketType = new Label("Market's type: "+account.getMarket().getMarketType().toString().toLowerCase());
-        Label labelStartTime = new Label("The Start Time of market is");
-        Label labelEndTime = new Label("and the end Time is");
+        borderPane.setTop(new VBox(new Label(""),new Label(""),new Label("View or edit your market"),new Label(""),labelError,new Label("")));
         TextField nameField = new TextField(account.getMarket().getName());
         TextField addressField = new TextField(account.getMarket().getAddress());
-
-        VBox leftLeftVBox = new VBox(labelName,labelAddress);
+        VBox leftLeftVBox = new VBox(new Label("Market's Name:"),new Label("Address:"));
         leftLeftVBox.setSpacing(25);
         VBox leftVBox = new VBox(nameField,addressField);
         leftVBox.setSpacing(10);
-        VBox rightVBox = new VBox(labelMarketType);
+        VBox rightVBox = new VBox(new Label("Market's type: "+account.getMarket().getMarketType().toString().toLowerCase()));
         rightVBox.setSpacing(25);
-
         HBox hBoxTemp = new HBox();
         hBoxTemp.setSpacing(15);
         HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox);
-        VBox baseVBox = new VBox(hBox,hBoxTemp);
-
+        Button saveButton = new Button("Save");
+        VBox baseVBox = new VBox(hBox,hBoxTemp,saveButton);
+        baseVBox.setSpacing(10);
+        borderPane.setCenter(baseVBox);
         TextField workHourField = new TextField();
         ChoiceBox<Integer> startTime = new ChoiceBox<>();
         ChoiceBox<Integer> endTime = new ChoiceBox<>();
         ChoiceBox<Integer> choiceBoxCapacity = new ChoiceBox<>();
         ChoiceBox<RestaurantType> choiceBoxRestaurantType = new ChoiceBox<>();
-
         if (account.getMarket().getMarketType().equals(MarketType.RESTAURANT)) {
             Restaurant temp = (Restaurant) account.getMarket();
-            Label labelWorkHour = new Label("Schedule");
             workHourField = new TextField(temp.getWorkHour());
-            Label labelRestaurantType = new Label("Restaurant's Type");
             choiceBoxRestaurantType.getItems().addAll(RestaurantType.values());
             choiceBoxRestaurantType.setValue(temp.getType());
-            hBoxTemp.getChildren().addAll(labelWorkHour,workHourField,labelRestaurantType,choiceBoxRestaurantType);
-
+            hBoxTemp.getChildren().addAll(new Label("Schedule"),workHourField,new Label("Restaurant's Type"),choiceBoxRestaurantType);
         }else {
             ScheduleMarket temp = (ScheduleMarket) account.getMarket();
             startTime.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22);
             startTime.setValue(temp.getStartTime());
             startTime.setValue(temp.getEndTime());
-            Label labelCapacity = new Label("Capacity");
             choiceBoxCapacity.getItems().addAll(2,3,4,5,6,7,8,9,10);
             choiceBoxCapacity.setValue(temp.getCapacity());
-            HBox tempHBox = new HBox(labelStartTime,startTime,labelEndTime,endTime);
+            HBox tempHBox = new HBox(new Label("The Start Time of market is"),startTime,new Label("and the end Time is"),endTime);
             tempHBox.setSpacing(10);
-            VBox tempVBox = new VBox(tempHBox,new HBox(labelCapacity,choiceBoxCapacity));
+            VBox tempVBox = new VBox(tempHBox,new HBox(new Label("Capacity"),choiceBoxCapacity));
             hBoxTemp.getChildren().addAll(tempVBox);
             startTime.setOnAction(Event-> {
                 endTime.getItems().clear();
                 IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
             });
         }
-
-        baseVBox.setSpacing(10);
-        borderPane.setCenter(baseVBox);
-        Button saveButton = new Button("Save");
-        borderPane.setBottom(saveButton);
-
         TextField finalWorkHourField = workHourField;
-        saveButton.setOnAction(Event-> {
-            Market newMarket;
-            try {
-                if (account.getMarket().getMarketType().equals(MarketType.SUPER)) {
-                    newMarket = new SuperMarket(nameField.getText().trim(),addressField.getText().trim(),startTime.getValue(),endTime.getValue(),choiceBoxCapacity.getValue());
-                } else if (account.getMarket().getMarketType().equals(MarketType.FRUITSHOP)){
-                    newMarket = new FruitShop(nameField.getText().trim(),addressField.getText().trim(),startTime.getValue(),endTime.getValue(),choiceBoxCapacity.getValue());
-                } else {
-                    newMarket = new Restaurant(nameField.getText().trim(),addressField.getText().trim(),choiceBoxRestaurantType.getValue(), finalWorkHourField.getText().trim());
-                }
-                engine.getMarketService().updateMarket(account.getMarket(),newMarket);
-                labelError.setTextFill(Color.GREEN);
-                labelError.setText("Successfully updated");
-            } catch (Exception e) {
-                labelError.setTextFill(Color.RED);
-                labelError.setText(e.getMessage());
-            }
-
-        });
+        saveButton.setOnAction(Event-> saveButtonHandler(labelError, new ChoiceBox[]{choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity}, new TextField[]{nameField,addressField,finalWorkHourField}));
         return borderPane;
+    }
+
+    private void saveButtonHandler(Label labelError,ChoiceBox[] choiceBoxes,TextField[] textFields) {
+        Market newMarket;
+        try {
+            if (account.getMarket().getMarketType().equals(MarketType.SUPER)) {
+                newMarket = new SuperMarket(textFields[0].getText().trim(),textFields[1].getText().trim(),(Integer) choiceBoxes[1].getValue(),(Integer) choiceBoxes[2].getValue(),(Integer) choiceBoxes[3].getValue());
+            } else if (account.getMarket().getMarketType().equals(MarketType.FRUITSHOP)){
+                newMarket = new FruitShop(textFields[0].getText().trim(),textFields[1].getText().trim(),(Integer) choiceBoxes[1].getValue(),(Integer) choiceBoxes[2].getValue(),(Integer) choiceBoxes[3].getValue());
+            } else {
+                newMarket = new Restaurant(textFields[0].getText().trim(),textFields[1].getText().trim(),(RestaurantType) choiceBoxes[0].getValue(), textFields[2].getText().trim());
+            }
+            engine.getMarketService().updateMarket(account.getMarket(),newMarket);
+            labelError.setTextFill(Color.GREEN);
+            labelError.setText("Successfully updated");
+        } catch (Exception e) {
+            labelError.setTextFill(Color.RED);
+            labelError.setText(e.getMessage());
+        }
     }
 }

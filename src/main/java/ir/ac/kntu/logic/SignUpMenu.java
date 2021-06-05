@@ -37,6 +37,38 @@ public class SignUpMenu {
         Label labelError = new Label("");
         Pane pane = new Pane(labelError);
         pane.setPrefHeight(100);
+        TextField[] textFields = returnTextFields();
+        ToggleButton specialButton = new ToggleButton("Buy");
+        ChoiceBox<AccountType> selectBox = new ChoiceBox<>();
+        selectBox.getItems().addAll(AccountType.values());
+        VBox leftLeftVBox = new VBox(new Label("Name"),new Label("Username"),new Label("Password"));
+        leftLeftVBox.setSpacing(23);
+        VBox leftVBox = new VBox(textFields[0],textFields[1],textFields[3]);
+        leftVBox.setSpacing(10);
+        VBox rightVBox = new VBox(new Label("ID"),new Label("Account's type"));
+        rightVBox.setSpacing(23);
+        VBox rightRightVBox = new VBox(textFields[2],selectBox);
+        rightRightVBox.setSpacing(10);
+        HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
+        hBox.setSpacing(5);
+        borderPane.setCenter(new VBox(pane,hBox));
+        selectBox.setOnAction(Event->{
+            if (selectBox.getValue().equals(AccountType.USER)) {
+                leftLeftVBox.getChildren().addAll(new Label("Phone"),new Label("Address"),new Label("Special Account"));
+                leftVBox.getChildren().addAll(textFields[5],textFields[4],specialButton);
+            } else {
+                if (leftLeftVBox.getChildren().size() > 3) {
+                    leftLeftVBox.getChildren().removeAll(leftLeftVBox.getChildren().get(leftLeftVBox.getChildren().size() -1),leftLeftVBox.getChildren().get(leftLeftVBox.getChildren().size() -2),leftLeftVBox.getChildren().get(leftLeftVBox.getChildren().size() -3));
+                    leftVBox.getChildren().removeAll(leftVBox.getChildren().get(leftVBox.getChildren().size()-3),leftVBox.getChildren().get(leftVBox.getChildren().size()-2),specialButton);
+                }
+            }
+        });
+        createUserButton.setOnAction(Event-> createAccount(textFields,labelError,selectBox,specialButton));
+        backButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
+        new Main().changeScene(borderPane);
+    }
+
+    private TextField[] returnTextFields() {
         TextField nameField = new TextField();
         nameField.setPromptText("full name");
         TextField usernameField = new TextField();
@@ -49,65 +81,30 @@ public class SignUpMenu {
         addressField.setPromptText("address");
         TextField phoneField = new TextField();
         phoneField.setPromptText("phone");
-        Label labelName = new Label("Name");
-        Label labelUsername = new Label("Username");
-        Label labelPassword = new Label("Password");
-        Label labelID = new Label("ID");
-        Label labelType = new Label("Account's type");
-        Label labelAddress = new Label("Address");
-        Label labelPhone = new Label("Phone");
-        Label labelSpecialAccount = new Label("Special Account");
-        ToggleButton specialButton = new ToggleButton("Buy");
-        ChoiceBox<AccountType> selectBox = new ChoiceBox<>();
-        selectBox.getItems().addAll(AccountType.values());
-        VBox leftLeftVBox = new VBox(labelName,labelUsername,labelPassword);
-        leftLeftVBox.setSpacing(23);
-        VBox leftVBox = new VBox(nameField,usernameField,passwordField);
-        leftVBox.setSpacing(10);
-        VBox rightVBox = new VBox(labelID,labelType);
-        rightVBox.setSpacing(23);
-        VBox rightRightVBox = new VBox(idField,selectBox);
-        rightRightVBox.setSpacing(10);
-        HBox hBox = new HBox(leftLeftVBox,leftVBox,rightVBox,rightRightVBox);
-        hBox.setSpacing(5);
-        borderPane.setCenter(new VBox(pane,hBox));
-        selectBox.setOnAction(Event->{
-            if (selectBox.getValue().equals(AccountType.USER)) {
-                leftLeftVBox.getChildren().addAll(labelPhone,labelAddress,labelSpecialAccount);
-                leftVBox.getChildren().addAll(phoneField,addressField,specialButton);
-            } else {
-                leftLeftVBox.getChildren().removeAll(labelPhone,labelAddress,labelSpecialAccount);
-                leftVBox.getChildren().removeAll(labelPhone,labelAddress,specialButton);
-            }
-        });
-        createUserButton.setOnAction(Event->{
-            try {
-                Account accountTemp = new Account(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),passwordField.getText(), selectBox.getValue());
-                createUserButtonPressed(specialButton.isSelected(),accountTemp,addressField.getText().trim(), phoneField.getText().trim());
-                labelError.setTextFill(Color.GREEN);
-                labelError.setText("Successfully created, press back and login.");
-            } catch (IllegalArgumentException e) {
-                labelError.setTextFill(Color.RED);
-                labelError.setText(e.getMessage());
-            }
-        });
-        backButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
-        new Main().changeScene(borderPane);
+        return new TextField[]{nameField,usernameField,idField,passwordField,addressField,phoneField};
     }
 
-    private void createUserButtonPressed(boolean specialAccount,Account accountTemp,String address,String phone) {
+    private void createAccount(TextField[] textFields,Label labelError,ChoiceBox<AccountType> selectBox,ToggleButton specialButton) {
         try {
-            Account newAccount;
-            if (accountTemp.getAccountType().equals(AccountType.USER)) {
-                newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone, specialAccount);
-            } else if(accountTemp.getAccountType().equals(AccountType.MANAGER)) {
-                newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
-            } else {
-                newAccount = new Admin(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
-            }
-            engine.getAccountService().addAccount(newAccount);
-
-        } catch (Exception ignored) {
+            Account accountTemp = new Account(textFields[2].getText().trim(),textFields[0].getText().trim(),textFields[1].getText().trim(),textFields[3].getText(), selectBox.getValue());
+            createAccountButtonPressed(specialButton.isSelected(),accountTemp,textFields[4].getText().trim(), textFields[5].getText().trim());
+            labelError.setTextFill(Color.GREEN);
+            labelError.setText("Successfully created, press back and login.");
+        } catch (IllegalArgumentException e) {
+            labelError.setTextFill(Color.RED);
+            labelError.setText(e.getMessage());
         }
+    }
+
+    private void createAccountButtonPressed(boolean specialAccount, Account accountTemp, String address, String phone) {
+        Account newAccount;
+        if (accountTemp.getAccountType().equals(AccountType.USER)) {
+            newAccount = new User(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword(),address,phone, specialAccount);
+        } else if(accountTemp.getAccountType().equals(AccountType.MANAGER)) {
+            newAccount = new Manager(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
+        } else {
+            newAccount = new Admin(accountTemp.getId(),accountTemp.getName(),accountTemp.getUsername(),accountTemp.getPassword());
+        }
+        engine.getAccountService().addAccount(newAccount);
     }
 }
