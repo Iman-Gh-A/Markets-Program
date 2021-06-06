@@ -27,6 +27,9 @@ import javafx.scene.control.Button;
 import com.devskiller.jfairy.Fairy;
 import com.devskiller.jfairy.producer.person.Person;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -55,7 +58,10 @@ public class Main extends Application {
         VBox vBox = new VBox(createButton,startButton,pb);
 
         createButton.setOnAction(e-> {
-            createFakeObject(engine);
+            try {
+                createFakeObject(engine);
+            } catch (IOException ioException) {
+            }
             pb.setProgress(1);
         });
 
@@ -70,7 +76,7 @@ public class Main extends Application {
         stage.getScene().setRoot(newPane);
     }
 
-    private void createFakeObject(Engine engine) {
+    private void createFakeObject(Engine engine) throws IOException {
         createFakeAccounts(engine);
         createFakeObjectBig(engine);
         createFakeOrders(engine);
@@ -106,8 +112,8 @@ public class Main extends Application {
         ((Manager)managerTemp2).setMarket(superTemp1);
     }
 
-    public void createFakeObjectBig(Engine engine) {
-
+    public void createFakeObjectBig(Engine engine) throws IOException {
+        FileWriter fileWriter = new FileWriter("src/main/java/ir/ac/kntu/Accounts.txt");
         for (int i = 0; i < RandomHelper.getRandomInt(30,10000); i++) {
             Person fairyPerson = Fairy.create().person();
             Account newAccountFake;
@@ -124,7 +130,8 @@ public class Main extends Application {
             }
             try {
                 engine.getAccountService().addAccount(newAccountFake);
-                System.out.println(newAccountFake.toStringForKnow());
+                fileWriter.write(newAccountFake.toStringForKnow()+"\n");
+//                System.out.println(newAccountFake.toStringForKnow());
                 if (newAccountFake.getAccountType().equals(AccountType.MANAGER)) {
                     Market marketTemp = createMarketFake();
                     engine.getMarketService().addMarket(marketTemp);
@@ -133,8 +140,8 @@ public class Main extends Application {
             } catch (Exception e) {
                 i--;
             }
-
         }
+        fileWriter.close();
     }
 
     private Market createMarketFake() {
