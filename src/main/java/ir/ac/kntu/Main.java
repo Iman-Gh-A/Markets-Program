@@ -3,16 +3,15 @@ package ir.ac.kntu;
 import com.devskiller.jfairy.producer.company.Company;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.logic.LoginMenu;
-import ir.ac.kntu.model.classes.markets.FruitShop;
-import ir.ac.kntu.model.classes.markets.Market;
-import ir.ac.kntu.model.classes.markets.Restaurant;
-import ir.ac.kntu.model.classes.markets.SuperMarket;
+import ir.ac.kntu.model.classes.Order;
+import ir.ac.kntu.model.classes.markets.*;
 import ir.ac.kntu.model.classes.persons.*;
 import ir.ac.kntu.model.classes.products.Food;
 import ir.ac.kntu.model.classes.products.Fruit;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.classes.products.SuperProduct;
 import ir.ac.kntu.model.enums.AccountType;
+import ir.ac.kntu.model.enums.MarketType;
 import ir.ac.kntu.model.enums.RestaurantType;
 import ir.ac.kntu.model.enums.VehicleType;
 import ir.ac.kntu.util.RandomHelper;
@@ -28,6 +27,9 @@ import javafx.scene.control.Button;
 import com.devskiller.jfairy.Fairy;
 import com.devskiller.jfairy.producer.person.Person;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -71,6 +73,8 @@ public class Main extends Application {
     private void createFakeObject(Engine engine) {
         createFakeAccounts(engine);
         createFakeObjectBig(engine);
+        createFakeOrders(engine);
+        createFakeOrders(engine);
     }
 
     private void createFakeAccounts(Engine engine) {
@@ -137,14 +141,14 @@ public class Main extends Application {
         Person fairyPerson = Fairy.create().person();
         Company companyFairy = Fairy.create().company();
         Market newMarketFake = new Restaurant(companyFairy.getName().trim(), fairyPerson.getAddress().getAddressLine2(),RestaurantType.MEDIUM,"Sunday Monday");
-        switch (new Random().nextInt(2)) {
+        switch (new Random().nextInt(3)) {
             case 0:
                 int temp = RandomHelper.getRandomInt(0,22);
-                newMarketFake = new SuperMarket(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp,RandomHelper.getRandomInt(temp,22),RandomHelper.getRandomInt(1,10));
+                newMarketFake = new SuperMarket(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp,RandomHelper.getRandomInt(temp+1,23),RandomHelper.getRandomInt(1,10));
                 break;
             case 1:
                 int temp2 = RandomHelper.getRandomInt(0,22);
-                newMarketFake = new FruitShop(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp2,RandomHelper.getRandomInt(temp2,22),RandomHelper.getRandomInt(1,10));
+                newMarketFake = new FruitShop(companyFairy.getName().trim(),fairyPerson.getAddress().getAddressLine2(),temp2,RandomHelper.getRandomInt(temp2+1,23),RandomHelper.getRandomInt(1,10));
                 break;
             default:
                 break;
@@ -178,9 +182,38 @@ public class Main extends Application {
     }
 
     private void addDeliveryToMarket(Market market) {
-        for (int i = 0; i < RandomHelper.getRandomInt(0,10); i++) {
+        for (int i = 0; i < RandomHelper.getRandomInt(1,10); i++) {
             Delivery delivery = new Delivery(Fairy.create().person().getFullName(),RandomHelper.getRandomID(),new Random().nextBoolean() ? VehicleType.CAR : VehicleType.MOTOR);
             market.addDelivery(delivery);
+        }
+    }
+
+    private void createFakeOrders(Engine engine) {
+        for (int i = 0; i < RandomHelper.getRandomInt(20,50); i++) {
+            User orderingUser = (User) engine.getAccountService().getListOfAccountByType(AccountType.USER).get(new Random().nextInt(engine.getAccountService().getListOfAccountByType(AccountType.USER).size()));
+            Market orderingMarket = engine.getMarketService().getMarkets().get(new Random().nextInt(engine.getMarketService().getMarkets().size()));
+            ArrayList<Product> orderingProducts = new ArrayList<>();
+            for (Product currentProduct: orderingMarket.getProducts()) {
+                if (new Random().nextBoolean() && currentProduct.getAvailabilityInt() != 0) {
+                    orderingProducts.add(currentProduct);
+                }
+            }
+            int[] numbers = new int[orderingProducts.size()];
+            Map.Entry<String,Integer> time = null;
+            if (orderingMarket.getMarketType().equals(MarketType.RESTAURANT)) {
+                Arrays.fill(numbers, 1);
+            } else {
+                Arrays.fill(numbers, 1);
+                if (orderingMarket.getSchedule().size() != 0) {
+                    time = orderingMarket.getSchedule().get(new Random().nextInt(orderingMarket.getSchedule().size()));
+                }
+            }
+            try {
+                Order newFakeOrder = new Order(orderingUser,orderingMarket,orderingProducts,numbers,time);
+                engine.getOrderService().addOrder(newFakeOrder);
+            } catch (Exception e) {
+                i--;
+            }
         }
     }
 }
