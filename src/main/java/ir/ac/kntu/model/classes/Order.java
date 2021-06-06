@@ -5,6 +5,7 @@ import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.Delivery;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.classes.products.Product;
+import ir.ac.kntu.model.enums.MarketType;
 import ir.ac.kntu.model.enums.OrderStatus;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class Order {
         this.market = market;
         this.products = products;
         counter = number;
+        if (!market.getMarketType().equals(MarketType.RESTAURANT) && deliveryTime == null) {
+            throw new IllegalArgumentException("Error");
+        }
         this.deliveryTime = deliveryTime;
         cost = calculateCost();
         comment = null;

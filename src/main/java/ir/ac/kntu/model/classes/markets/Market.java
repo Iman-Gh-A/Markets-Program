@@ -27,7 +27,7 @@ public class Market {
     public Market(String name, String address, MarketType marketType) {
         setName(name);
         setAddress(address);
-        this.rate = 2.5;
+        this.rate = 5.0;
         this.marketType = marketType;
         products = new ArrayList<>();
         comments = new ArrayList<>();
