@@ -1,9 +1,11 @@
 package ir.ac.kntu.service;
 
+import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
+import ir.ac.kntu.model.enums.MarketType;
 
 import java.util.ArrayList;
 
@@ -86,5 +88,15 @@ public class AccountService {
         if (!newPassword.equals("")) {
             oldManager.setPassword(newPassword);
         }
+    }
+
+    public ArrayList<Account> getListOfAccountByType(AccountType accountType) {
+        ArrayList<Account> relatedAccounts = new ArrayList<>();
+        for (Account currentAccount : getAccounts()) {
+            if (currentAccount.getAccountType().equals(accountType)) {
+                relatedAccounts.add(currentAccount);
+            }
+        }
+        return relatedAccounts;
     }
 }

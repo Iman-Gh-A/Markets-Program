@@ -73,9 +73,11 @@ public class User extends Account {
 
     @Override
     public String toString() {
-        return  "ID: " + getId() +
+        return  "Type: " + getAccountType() +
+                " |ID: " + getId() +
                 " |Name: " + getName() +
                 " |Username: " + getUsername() +
+                " |Password: " + getPassword() +
                 " |Phone num: " + getPhone() +
                 " |Address: " + getAddress() +
                 " |Number of Order: " + getOrders().size() +

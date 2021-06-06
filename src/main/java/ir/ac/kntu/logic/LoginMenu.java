@@ -10,6 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -67,18 +68,18 @@ public class LoginMenu {
     private void signInButtonPressed(String username, String password) {
         Account currentAccount = engine.getAccountService().searchAccountByUsername(username);
         if (currentAccount != null && currentAccount.getPassword().equals(password)) {
+            AccountMenu accountMenu;
             try {
-                AdminMenu adminMenu = new AdminMenu(currentAccount, engine);
-                adminMenu.showBaseMenu();
+                accountMenu = new AdminMenu(currentAccount, engine);
             } catch (Exception e) {
                 try {
-                    ManagerMenu managerMenu = new ManagerMenu(currentAccount, engine);
-                    managerMenu.showBaseMenu();
+                    accountMenu = new ManagerMenu(currentAccount, engine);
                 } catch (Exception c) {
-                    UserMenu userMenu = new UserMenu(currentAccount, engine);
-                    userMenu.showBaseMenu();
+                    accountMenu = new UserMenu(currentAccount, engine);
                 }
             }
+            new Main().changeScene(new Pane(accountMenu.showBaseMenu()));
+
         } else {
             throw new IllegalArgumentException("The username or password is incorrect");
         }

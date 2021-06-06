@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 import java.lang.IllegalArgumentException;
 
 
-public class UserMenu{
+public class UserMenu implements AccountMenu{
 
     private final User account;
     private final Engine engine;
@@ -30,11 +30,12 @@ public class UserMenu{
         this.account = (User) account;
     }
 
-    public void showBaseMenu() {
+    @Override
+    public Pane showBaseMenu() {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefWidth(700);
         borderPane.setPrefHeight(500);
-        Label labelName = new Label("\t"+account.getName()+"\t");
+        Label labelName = new Label("User\t\t\n"+account.getName()+"\t");
         Button profileButton = new Button("Profile");
         profileButton.setPrefWidth(120);
         Button orderingButton = new Button("Ordering");
@@ -62,7 +63,7 @@ public class UserMenu{
             new LoginMenu(engine).getLoginPain();
         });
 
-        new Main().changeScene(new Pane(borderPane));
+        return borderPane;
     }
 
     private Pane showProfileAndEdit() {

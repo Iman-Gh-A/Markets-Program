@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class ManagerMenu {
+public class ManagerMenu implements AccountMenu{
     private final Manager account;
     private final Engine engine;
 
@@ -41,11 +41,12 @@ public class ManagerMenu {
         this.account = (Manager) account;
     }
 
-    public void showBaseMenu() {
+    @Override
+    public Pane showBaseMenu() {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefWidth(700);
         borderPane.setPrefHeight(500);
-        Label labelName = new Label("\t"+account.getName()+"\t");
+        Label labelName = new Label("Manager\t\t\n"+account.getName()+"\t");
         Button profileButton = new Button("Profile");
         profileButton.setPrefWidth(120);
         Button marketButton = new Button("Market");
@@ -73,7 +74,8 @@ public class ManagerMenu {
         });
         exitButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
 
-        new Main().changeScene(new Pane(borderPane));
+        return borderPane;
+//        new Main().changeScene(new Pane(borderPane));
     }
 
     private Pane showProfileAndEdit() {
