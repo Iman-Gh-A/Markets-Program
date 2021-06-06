@@ -61,7 +61,10 @@ public class MarketService {
     }
 
     public ArrayList<Market> searchProductByNameBestMarkets(MarketType marketType, String productName) {
-        ArrayList<Market> MarketBestProduct = new ArrayList<>();
+        if (productName.equals("")) {
+            return getListOfMarketByType(marketType,"");
+        }
+        ArrayList<Market> marketBestProduct = new ArrayList<>();
         HashMap<Market, Double> bestMarkets = new HashMap<>();
         for (Market currentMarket : getListOfMarketByType(marketType,"")) {
             for (Product currentProduct : currentMarket.getProducts()) {
@@ -73,9 +76,9 @@ public class MarketService {
         List<Map.Entry<Market,Double>> bestMarketsToList = new LinkedList<>(bestMarkets.entrySet());
         bestMarketsToList.sort(ComparatorHelper.rateOfProductDifferentMarketsComparator());
         for (Map.Entry<Market, Double> currentMap : bestMarketsToList) {
-            MarketBestProduct.add(currentMap.getKey());
+            marketBestProduct.add(currentMap.getKey());
         }
-        return MarketBestProduct;
+        return marketBestProduct;
     }
 
 }

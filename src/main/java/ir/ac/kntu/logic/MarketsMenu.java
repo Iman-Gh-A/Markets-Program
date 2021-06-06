@@ -67,17 +67,21 @@ public class MarketsMenu {
         });
         seeComments.setOnAction(Event-> seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems()));
         backButton.setOnAction(Event-> borderPane.setCenter(innerBorderPane));
-        searchButton.setOnAction(Event-> {
-            ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
-            tableView.getItems().clear();
-            tableView.getItems().addAll(searchedMarkets);
-        });
-        filterBestProductAllMarketsButton.setOnAction(e-> {
-            ArrayList<Market> searchedMarkets = engine.getMarketService().searchProductByNameBestMarkets(marketType,searchField.getText());
-            tableView.getItems().clear();
-            tableView.getItems().addAll(searchedMarkets);
-        });
+        searchButton.setOnAction(Event-> searchButtonHandler(marketType,searchField.getText().trim(),tableView));
+        filterBestProductAllMarketsButton.setOnAction(e-> filterBestProductAllMarketsButtonHandler(marketType,searchField.getText().trim(),tableView));
         return borderPane;
+    }
+
+    private void searchButtonHandler(MarketType marketType, String name,TableView<Market> tableView) {
+        ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,name);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(searchedMarkets);
+    }
+
+    private void filterBestProductAllMarketsButtonHandler(MarketType marketType, String name,TableView<Market> tableView) {
+        ArrayList<Market> searchedMarkets = engine.getMarketService().searchProductByNameBestMarkets(marketType,name);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(searchedMarkets);
     }
 
     private void seeCommentsButtonPressed(ObservableList<Market> temp) {
