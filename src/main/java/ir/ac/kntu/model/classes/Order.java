@@ -93,6 +93,7 @@ public class Order {
                 setDelivery(selectedDelivery);
                 status = OrderStatus.SENDING;
             } else if (status.equals(OrderStatus.SENDING)) {
+                deliveryTime.setValue(deliveryTime.getValue() - 1);
                 status = OrderStatus.DELIVERED;
             }
             return "Successful";
