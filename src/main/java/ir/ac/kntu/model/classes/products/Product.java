@@ -23,7 +23,7 @@ public class Product {
         this.cost = cost;
         this.availability = availability;
         this.productType = productType;
-        this.rate = 2.5;
+        this.rate = 5.0;
         comments = new ArrayList<>();
         commentsNum = 0;
 

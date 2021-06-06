@@ -3,9 +3,11 @@ package ir.ac.kntu.service;
 import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.markets.Restaurant;
 import ir.ac.kntu.model.classes.markets.ScheduleMarket;
+import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.enums.MarketType;
+import ir.ac.kntu.util.ComparatorHelper;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class MarketService {
     private final ArrayList<Market> markets;
@@ -56,6 +58,24 @@ public class MarketService {
             old.setStartEndSchedule(edited.getStartTime(), edited.getEndTime());
             old.setCapacity(edited.getCapacity());
         }
+    }
+
+    public ArrayList<Market> searchProductByNameBestMarkets(MarketType marketType, String productName) {
+        ArrayList<Market> MarketBestProduct = new ArrayList<>();
+        HashMap<Market, Double> bestMarkets = new HashMap<>();
+        for (Market currentMarket : getListOfMarketByType(marketType,"")) {
+            for (Product currentProduct : currentMarket.getProducts()) {
+                if (currentProduct.getName().equalsIgnoreCase(productName)) {
+                    bestMarkets.put(currentMarket,currentProduct.getRate());
+                }
+            }
+        }
+        List<Map.Entry<Market,Double>> bestMarketsToList = new LinkedList<>(bestMarkets.entrySet());
+        bestMarketsToList.sort(ComparatorHelper.rateOfProductDifferentMarketsComparator());
+        for (Map.Entry<Market, Double> currentMap : bestMarketsToList) {
+            MarketBestProduct.add(currentMap.getKey());
+        }
+        return MarketBestProduct;
     }
 
 }

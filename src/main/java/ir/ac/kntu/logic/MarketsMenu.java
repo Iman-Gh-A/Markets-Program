@@ -30,9 +30,10 @@ public class MarketsMenu {
         BorderPane borderPane = new BorderPane();
         BorderPane innerBorderPane = new BorderPane();
         Button searchButton = new Button("Search");
+        Button filterBestProductAllMarketsButton = new Button("Search in All Market for Product");
         TextField searchField = new TextField("");
-        searchField.setPromptText("Market's name");
-        innerBorderPane.setTop(new HBox(searchField,searchButton));
+        searchField.setPromptText("name");
+        innerBorderPane.setTop(new HBox(searchField,searchButton,filterBestProductAllMarketsButton));
         TableView<Market> tableView = new TableView<>();
         tableView.setPlaceholder(new Label("Nothing"));
         TableColumn<Market,String> nameColumn = new TableColumn<>("Name");
@@ -68,6 +69,11 @@ public class MarketsMenu {
         backButton.setOnAction(Event-> borderPane.setCenter(innerBorderPane));
         searchButton.setOnAction(Event-> {
             ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
+            tableView.getItems().clear();
+            tableView.getItems().addAll(searchedMarkets);
+        });
+        filterBestProductAllMarketsButton.setOnAction(e-> {
+            ArrayList<Market> searchedMarkets = engine.getMarketService().searchProductByNameBestMarkets(marketType,searchField.getText());
             tableView.getItems().clear();
             tableView.getItems().addAll(searchedMarkets);
         });

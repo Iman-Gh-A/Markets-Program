@@ -1,5 +1,6 @@
 package ir.ac.kntu.util;
 
+import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.products.Food;
 import ir.ac.kntu.model.classes.markets.Restaurant;
 
@@ -33,12 +34,12 @@ public class ComparatorHelper {
         return commentNum.compareTo(commentNum1);
     };
 
-    private static final Comparator<Map.Entry<Restaurant,Double>> RATE_OF_FOOD_DIFFERENT_RESTAURANTS = (restaurantIntegerEntry, t1) -> t1.getValue().compareTo(restaurantIntegerEntry.getValue());
+    private static final Comparator<Map.Entry<Market,Double>> RATE_OF_PRODUCT_DIFFERENT_MARKETS = (MarketIntegerEntry, t1) -> t1.getValue().compareTo(MarketIntegerEntry.getValue());
 
     private static final Comparator<Map.Entry<String,Integer>> SCHEDULE = Comparator.comparing(Map.Entry::getKey);
 
-    public static Comparator<Map.Entry<Restaurant, Double>> rateOfFoodDifferentRestaurantsComparator() {
-        return RATE_OF_FOOD_DIFFERENT_RESTAURANTS;
+    public static Comparator<Map.Entry<Market, Double>> rateOfProductDifferentMarketsComparator() {
+        return RATE_OF_PRODUCT_DIFFERENT_MARKETS;
     }
 
     public static Comparator<Map.Entry<String,Integer>> schedule() {
