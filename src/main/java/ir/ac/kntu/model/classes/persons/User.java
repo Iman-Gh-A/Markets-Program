@@ -14,7 +14,7 @@ public class User extends Account {
     private String phone;
     private final ArrayList<Order> orders;
     private final ArrayList<Comment> comments;
-    private boolean specialAccount;
+    private final boolean specialAccount;
 
     public User(String id, String name, String username, String password, String address, String phone, boolean specialAccount) {
         super(id, name, username, password, AccountType.USER);
@@ -41,10 +41,6 @@ public class User extends Account {
 
     public boolean isSpecialAccount() {
         return specialAccount;
-    }
-
-    public void setSpecialAccount(boolean specialAccount) {
-        this.specialAccount = specialAccount;
     }
 
     public String getPhone() {

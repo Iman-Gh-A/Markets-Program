@@ -1,6 +1,5 @@
 package ir.ac.kntu.logic;
 
-import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.Order;
@@ -17,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -25,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -69,13 +66,9 @@ public class ManagerMenu implements AccountMenu{
                 borderPane.setCenter(viewOrEditMarket());
             }
         });
-        manageMarketButton.setOnAction(Event ->{
-            borderPane.setCenter(manageMarket());
-        });
+        manageMarketButton.setOnAction(Event -> borderPane.setCenter(manageMarket()));
         exitButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
-
         return borderPane;
-//        new Main().changeScene(new Pane(borderPane));
     }
 
     private Pane showProfileAndEdit() {
@@ -183,7 +176,7 @@ public class ManagerMenu implements AccountMenu{
     }
 
     private void createButtonHandler(ChoiceBox[] choiceBoxes, TextField[] textFields, Label labelError) {
-        Market newMarket = null;
+        Market newMarket;
         try {
             if (choiceBoxes[0].getValue().equals(MarketType.SUPER)) {
                 newMarket = new SuperMarket(textFields[0].getText().trim(),textFields[1].getText().trim(),(Integer) choiceBoxes[2].getValue(),(Integer) choiceBoxes[3].getValue(),(Integer) choiceBoxes[4].getValue());

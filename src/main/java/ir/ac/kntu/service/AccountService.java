@@ -1,11 +1,9 @@
 package ir.ac.kntu.service;
 
-import ir.ac.kntu.model.classes.markets.Market;
 import ir.ac.kntu.model.classes.persons.Account;
 import ir.ac.kntu.model.classes.persons.Manager;
 import ir.ac.kntu.model.classes.persons.User;
 import ir.ac.kntu.model.enums.AccountType;
-import ir.ac.kntu.model.enums.MarketType;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
 package ir.ac.kntu.logic;
 
-import ir.ac.kntu.Main;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.Order;
@@ -50,18 +49,10 @@ public class UserMenu implements AccountMenu{
         borderPane.setLeft(leftVBox);
         borderPane.setCenter(showProfileAndEdit());
 
-        profileButton.setOnAction(Event-> {
-            borderPane.setCenter(showProfileAndEdit());
-        });
-        orderingButton.setOnAction(Event-> {
-            borderPane.setCenter(showOrderingMenu());
-        });
-        historyButton.setOnAction(Event ->{
-            borderPane.setCenter(showOrderHistoryMenu());
-        });
-        exitButton.setOnAction(Event-> {
-            new LoginMenu(engine).getLoginPain();
-        });
+        profileButton.setOnAction(Event-> borderPane.setCenter(showProfileAndEdit()));
+        orderingButton.setOnAction(Event-> borderPane.setCenter(showOrderingMenu()));
+        historyButton.setOnAction(Event -> borderPane.setCenter(showOrderHistoryMenu()));
+        exitButton.setOnAction(Event-> new LoginMenu(engine).getLoginPain());
 
         return borderPane;
     }
@@ -139,7 +130,6 @@ public class UserMenu implements AccountMenu{
         listView.setPlaceholder(new Label("Nothing"));
         topVBox.getChildren().add(listView);
         borderPane.setTop(topVBox);
-        VBox bottomVBox = new VBox();
         ChoiceBox<Integer> selectRate = new ChoiceBox<>();
         selectRate.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10);
         TextArea commentArea = new TextArea();
@@ -158,7 +148,7 @@ public class UserMenu implements AccountMenu{
                     if (!order.getStatus().equals(OrderStatus.DELIVERED)) {
                         throw new IllegalArgumentException("this order doesn't delivered.");
                     }
-                    order.addComment(new Comment(commentArea.getText().trim(),(Integer) selectRate.getValue(), account,  order.getMarket(), order.getProducts()));
+                    order.addComment(new Comment(commentArea.getText().trim(),selectRate.getValue(), account,  order.getMarket(), order.getProducts()));
                     alertLabel.setTextFill(Color.GREEN);
                     alertLabel.setText("Successfully Commenting");
                 }
@@ -169,126 +159,4 @@ public class UserMenu implements AccountMenu{
         });
         return borderPane;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    private Pane showMarketsForOrdering(MarketType marketType) {
-//        ArrayList<Market> relatedMarkets = engine.getMarketService().getListOfMarketByType(marketType,"");
-//        BorderPane borderPane = new BorderPane();
-//        BorderPane innerBorderPane = new BorderPane();
-//        Button searchButton = new Button("Search");
-//        TextField searchField = new TextField("");
-//        searchField.setPromptText("Market's name");
-//        innerBorderPane.setTop(new HBox(searchField,searchButton));
-//        TableView tableView = new TableView();
-//        tableView.setPlaceholder(new Label("Nothing"));
-//        TableColumn<Market,String> nameColumn = new TableColumn<>("Name");
-//        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-//        TableColumn<Market,String> typeColumn = new TableColumn<>("Type");
-//        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-//        TableColumn<Market,String> rateColumn = new TableColumn<>("Rate");
-//        rateColumn.setCellValueFactory(new PropertyValueFactory<>("rate"));
-//        TableColumn<Market,String> commentNumColumn = new TableColumn<>("Comment Number");
-//        commentNumColumn.setCellValueFactory(new PropertyValueFactory<>("commentsNum"));
-//        tableView.getColumns().addAll(nameColumn,typeColumn,rateColumn,commentNumColumn);
-//        tableView.getItems().addAll(relatedMarkets);
-//        Button nextButton = new Button("Next");
-//        Button seeComments = new Button("See Comments");
-//        innerBorderPane.setCenter(tableView);
-//        innerBorderPane.setBottom(new HBox(nextButton,seeComments));
-//        Button backButton = new Button("Back");
-//        BorderPane borderPane2 = new BorderPane();
-//        borderPane2.setCenter(innerBorderPane);
-//        VBox vBox = new VBox(borderPane2,backButton);
-//        borderPane.setCenter(vBox);
-//        nextButton.setOnAction(Event-> {
-//            ObservableList<Market> temp = tableView.getSelectionModel().getSelectedItems();
-//            if (temp.size() != 0) {
-//                Market selectedMarket = temp.get(0);
-//                ProductsMenu productsMenu = new ProductsMenu(engine, account, selectedMarket);
-//                borderPane2.setCenter(productsMenu.showProductsOfMarketMenu());
-//            }
-//        });
-//        seeComments.setOnAction(Event-> {
-//            seeCommentsButtonPressed(tableView.getSelectionModel().getSelectedItems());
-//        });
-//        backButton.setOnAction(Event-> {
-//            borderPane2.setCenter(innerBorderPane);
-//        });
-//        searchButton.setOnAction(Event-> {
-//            ArrayList<Market> searchedMarkets = engine.getMarketService().getListOfMarketByType(marketType,searchField.getText());
-//            tableView.getItems().clear();
-//            tableView.getItems().addAll(searchedMarkets);
-//        });
-//        return borderPane;
-//    }
-//
-//    private void seeCommentsButtonPressed(ObservableList<Market> temp) {
-//        if (temp.size() != 0) {
-//            Stage commentStage = new Stage();
-//            BorderPane borderPane = new BorderPane();
-//            ListView listView = new ListView();
-//            listView.setPlaceholder(new Label("Nothing"));
-//            listView.setPrefWidth(500);
-//            listView.getItems().addAll(temp.get(0).getComments());
-//            borderPane.setCenter(listView);
-//            commentStage.setScene(new Scene(borderPane));
-//            commentStage.show();
-//        }
-//    }
 }

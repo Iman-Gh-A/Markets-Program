@@ -6,14 +6,6 @@ public class RandomHelper {
 
     private static final Random RANDOM = new Random();
 
-    public static String getRandomWord() {
-        String createdWord = "";
-        for (int i = 0; i < getRandomInt(3,10); i++) {
-            createdWord += (char)('a' + getRandomInt(0,25));
-        }
-        return createdWord;
-    }
-
     public static Double getRandomCost() {
         return getRandomInt(5000,50000) + Double.parseDouble(String.format("%.2f", RANDOM.nextDouble()));
     }
@@ -23,20 +15,20 @@ public class RandomHelper {
     }
 
     public static String getRandomID() {
-        String id = "";
+        StringBuilder id = new StringBuilder();
         for (int i = 0; i < 10; i++) {
-            id += RANDOM.nextInt(10);
+            id.append(RANDOM.nextInt(10));
         }
-        return id;
+        return id.toString();
     }
 
     public static String getRandomPhone() {
-        String phone = "09-";
+        StringBuilder phone = new StringBuilder("09-");
         for (int j = 0; j < 3; j++) {
             for (int i = 0; i < 3; i++) {
-                phone += RANDOM.nextInt(10);
+                phone.append(RANDOM.nextInt(10));
             }
-            phone += "-";
+            phone.append("-");
         }
         return phone.substring(0,phone.length()-1);
     }

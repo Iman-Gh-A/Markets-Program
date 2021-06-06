@@ -97,10 +97,6 @@ public class Market {
         return status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
     public String getName() {
         return name;
     }

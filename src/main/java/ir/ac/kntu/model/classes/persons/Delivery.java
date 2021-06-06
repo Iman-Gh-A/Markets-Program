@@ -17,10 +17,6 @@ public class Delivery extends Person {
         orders = new ArrayList<>();
     }
 
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
-
     public ArrayList<Order> getOrders() {
         return (ArrayList<Order>) orders.clone();
     }

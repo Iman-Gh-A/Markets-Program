@@ -5,7 +5,6 @@ import ir.ac.kntu.model.classes.markets.Restaurant;
 import ir.ac.kntu.model.classes.markets.ScheduleMarket;
 import ir.ac.kntu.model.enums.MarketType;
 
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 
 public class MarketService {
