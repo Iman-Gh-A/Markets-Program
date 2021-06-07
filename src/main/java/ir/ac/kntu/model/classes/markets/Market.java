@@ -58,6 +58,10 @@ public class Market {
         this.name = name;
     }
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }

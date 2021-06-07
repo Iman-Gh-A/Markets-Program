@@ -214,11 +214,13 @@ public class ManagerMenu implements AccountMenu{
         borderPane.setTop(new VBox(new Label(""),new Label(""),new Label("View or edit your market"),new Label(""),labelError,new Label("")));
         TextField nameField = new TextField(account.getMarket().getName());
         TextField addressField = new TextField(account.getMarket().getAddress());
+        CheckBox checkBoxStatus = new CheckBox("Status");
+        checkBoxStatus.setSelected(account.getMarket().isStatus());
         VBox leftLeftVBox = new VBox(new Label("Market's Name:"),new Label("Address:"));
         leftLeftVBox.setSpacing(25);
         VBox leftVBox = new VBox(nameField,addressField);
         leftVBox.setSpacing(10);
-        VBox rightVBox = new VBox(new Label("Market's type: "+account.getMarket().getMarketType().toString().toLowerCase()));
+        VBox rightVBox = new VBox(new HBox(new Label("Market's type: "+account.getMarket().getMarketType().toString().toLowerCase()),checkBoxStatus));
         rightVBox.setSpacing(25);
         HBox hBoxTemp = new HBox();
         hBoxTemp.setSpacing(15);
@@ -253,7 +255,7 @@ public class ManagerMenu implements AccountMenu{
             startTime.setOnAction(Event-> startTimeHandler(endTime,startTime));
         }
         TextField finalWorkHourField = workHourField;
-        saveButton.setOnAction(Event-> saveButtonHandler(labelError, new ChoiceBox[]{choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity}, new TextField[]{nameField,addressField,finalWorkHourField}));
+        saveButton.setOnAction(Event-> saveButtonHandler(labelError, new ChoiceBox[]{choiceBoxRestaurantType,startTime,endTime,choiceBoxCapacity}, new TextField[]{nameField,addressField,finalWorkHourField},checkBoxStatus.isSelected()));
         return borderPane;
     }
 
@@ -262,7 +264,7 @@ public class ManagerMenu implements AccountMenu{
         IntStream.range(startTime.getValue() +1, 24).forEach(i -> endTime.getItems().add(i));
     }
 
-    private void saveButtonHandler(Label labelError,ChoiceBox[] choiceBoxes,TextField[] textFields) {
+    private void saveButtonHandler(Label labelError,ChoiceBox[] choiceBoxes,TextField[] textFields, boolean status) {
         Market newMarket;
         try {
             if (account.getMarket().getMarketType().equals(MarketType.SUPER)) {
@@ -272,7 +274,7 @@ public class ManagerMenu implements AccountMenu{
             } else {
                 newMarket = new Restaurant(textFields[0].getText().trim(),textFields[1].getText().trim(),(RestaurantType) choiceBoxes[0].getValue(), textFields[2].getText().trim());
             }
-            engine.getMarketService().updateMarket(account.getMarket(),newMarket);
+            engine.getMarketService().updateMarket(account.getMarket(),newMarket,status);
             labelError.setTextFill(Color.GREEN);
             labelError.setText("Successfully updated");
         } catch (Exception e) {

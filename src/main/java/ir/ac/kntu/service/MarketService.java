@@ -27,7 +27,7 @@ public class MarketService {
     public ArrayList<Market> getListOfMarketByType(MarketType marketType, String marketName) {
         ArrayList<Market> relatedMarkets = new ArrayList<>();
         for (Market currentMarket : searchByName(marketName)) {
-            if (currentMarket.getMarketType().equals(marketType)) {
+            if (currentMarket.getMarketType().equals(marketType) && currentMarket.isStatus()) {
                 relatedMarkets.add(currentMarket);
             }
         }
@@ -44,9 +44,10 @@ public class MarketService {
         return marketsContainName;
     }
 
-    public void updateMarket(Market oldMarket, Market editedMarket) {
+    public void updateMarket(Market oldMarket, Market editedMarket,boolean status) {
         oldMarket.setName(editedMarket.getName());
         oldMarket.setAddress(editedMarket.getAddress());
+        oldMarket.setStatus(status);
         if (oldMarket.getMarketType().equals(MarketType.RESTAURANT)) {
             Restaurant old = (Restaurant) oldMarket;
             Restaurant edited = (Restaurant) editedMarket;
