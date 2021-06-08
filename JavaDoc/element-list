@@ -1,0 +1,10 @@
+ir.ac.kntu
+ir.ac.kntu.engine
+ir.ac.kntu.logic
+ir.ac.kntu.model.classes
+ir.ac.kntu.model.classes.markets
+ir.ac.kntu.model.classes.persons
+ir.ac.kntu.model.classes.products
+ir.ac.kntu.model.enums
+ir.ac.kntu.service
+ir.ac.kntu.util
