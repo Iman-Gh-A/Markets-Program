@@ -35,7 +35,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
-
+/**
+ * this project work with GUI and start whit javaFx.
+ * @author Iman Ghasemi Arani
+ */
 public class Main extends Application {
     private static Stage stage;
 
@@ -77,6 +80,11 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * this method create a fake data with help of devskiller library and Fairy
+     * @param engine get Engine
+     * @throws IOException
+     */
     private void createFakeObject(Engine engine) throws IOException {
         createFakeAccounts(engine);
         createFakeObjectBig(engine);
