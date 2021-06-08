@@ -9,6 +9,11 @@ import ir.ac.kntu.util.ComparatorHelper;
 
 import java.util.*;
 
+/**
+ * MarketService class is a service class between Market class and other classes
+ * in this class not existed IO methods
+ * @author Iman Ghasemi Arani
+ */
 public class MarketService {
     private final ArrayList<Market> markets;
 
@@ -24,6 +29,14 @@ public class MarketService {
         return (ArrayList<Market>) markets.clone();
     }
 
+
+    /**
+     * this method get a Market type and a string for market's name,
+     * and then return a list of markets related to thr market type and the string.
+     * @param marketType get a Market Type
+     * @param marketName get a String for name
+     * @return a list of Markets
+     */
     public ArrayList<Market> getListOfMarketByType(MarketType marketType, String marketName) {
         ArrayList<Market> relatedMarkets = new ArrayList<>();
         for (Market currentMarket : searchByName(marketName)) {
@@ -34,6 +47,11 @@ public class MarketService {
         return relatedMarkets;
     }
 
+    /**
+     * this method get a string name for market's name and return a list of markets with the name.
+     * @param nameSearching just return markets that contain this name
+     * @return a list of markets that contain the name
+     */
     public ArrayList<Market> searchByName(String nameSearching) {
         ArrayList<Market> marketsContainName = new ArrayList<>();
         for (Market currentMarket : getMarkets()) {
@@ -44,6 +62,13 @@ public class MarketService {
         return marketsContainName;
     }
 
+    /**
+     * this method get a old market and edited market and new status,
+     * then update old market whit edited data from edited market and new status.
+     * @param oldMarket changing this market's data
+     * @param editedMarket change data from this market
+     * @param status this is the new status of the market
+     */
     public void updateMarket(Market oldMarket, Market editedMarket,boolean status) {
         oldMarket.setName(editedMarket.getName());
         oldMarket.setAddress(editedMarket.getAddress());
@@ -61,6 +86,16 @@ public class MarketService {
         }
     }
 
+    /**
+     * this method get a product name,
+     * search between all markets and put markets that contain the product (for key), and rate of the product in that market (for value) to a hashmap,
+     * then entries of hashmap added to a list whit help of linked list class,
+     * and then sort the list whit helper class comparator,
+     * and the finally added key of enters of hashmap to a list and return it
+     * @param marketType get a Market type for return this markets
+     * @param productName get a product name
+     * @return a list of best markets that contain the product, list is sorted.
+     */
     public ArrayList<Market> searchProductByNameBestMarkets(MarketType marketType, String productName) {
         if (productName.equals("")) {
             return getListOfMarketByType(marketType,"");

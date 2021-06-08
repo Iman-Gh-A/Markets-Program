@@ -85,7 +85,7 @@ public class AdminMenu implements AccountMenu{
         saveButton.setOnAction(Event ->{
             try {
                 Manager tempUser = new Manager(idField.getText().trim(),nameField.getText().trim(),usernameField.getText().trim(),"1234");
-                engine.getAccountService().updateManager(account,tempUser,passwordField.getText());
+                engine.getAccountService().updateManagerOrAdmin(account,tempUser,passwordField.getText());
                 labelError.setTextFill(Color.GREEN);
                 labelError.setText("Successfully Change");
             } catch (Exception e) {
