@@ -11,10 +11,7 @@ import ir.ac.kntu.model.classes.products.Food;
 import ir.ac.kntu.model.classes.products.Fruit;
 import ir.ac.kntu.model.classes.products.Product;
 import ir.ac.kntu.model.classes.products.SuperProduct;
-import ir.ac.kntu.model.enums.AccountType;
-import ir.ac.kntu.model.enums.MarketType;
-import ir.ac.kntu.model.enums.RestaurantType;
-import ir.ac.kntu.model.enums.VehicleType;
+import ir.ac.kntu.model.enums.*;
 import ir.ac.kntu.util.RandomHelper;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -235,16 +232,13 @@ public class Main extends Application {
 
     private void createFakeComments(Engine engine) {
         for (Order currentOrder : engine.getOrderService().getOrders()) {
-            if (new Random().nextBoolean()) {
-                currentOrder.updateStatus(null);
-                if (new Random().nextBoolean() && currentOrder.getMarket().getDeliveries().size() > 0) {
-                    currentOrder.updateStatus(currentOrder.getMarket().getDeliveries().get(new Random().nextInt(currentOrder.getMarket().getDeliveries().size())));
-                    if (new Random().nextBoolean()) {
-                        currentOrder.updateStatus(null);
-                        if (true) {
-                            Comment newFakeComment = new Comment(Fairy.create().textProducer().sentence(),RandomHelper.getRandomInt(0,12),currentOrder.getUser(),currentOrder.getMarket(),currentOrder.getProducts());
-                            currentOrder.addComment(newFakeComment);
-                        }
+            if (new Random().nextInt(4) % 4 != 0 && currentOrder.getMarket().getDeliveries().size() > 0 && !currentOrder.getMarket().toString().equals(MarketType.RESTAURANT.toString())) {
+                currentOrder.updateStatus(currentOrder.getMarket().getDeliveries().get(new Random().nextInt(currentOrder.getMarket().getDeliveries().size())));
+                if (new Random().nextBoolean()) {
+                    currentOrder.updateStatus(null);
+                    if (currentOrder.getStatus().equals(OrderStatus.DELIVERED)) {
+                        Comment newFakeComment = new Comment(Fairy.create().textProducer().sentence(),RandomHelper.getRandomInt(0,10),currentOrder.getUser(),currentOrder.getMarket(),currentOrder.getProducts());
+                        currentOrder.addComment(newFakeComment);
                     }
                 }
             }
