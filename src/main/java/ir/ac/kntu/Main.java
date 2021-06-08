@@ -3,6 +3,7 @@ package ir.ac.kntu;
 import com.devskiller.jfairy.producer.company.Company;
 import ir.ac.kntu.engine.Engine;
 import ir.ac.kntu.logic.LoginMenu;
+import ir.ac.kntu.model.classes.Comment;
 import ir.ac.kntu.model.classes.Order;
 import ir.ac.kntu.model.classes.markets.*;
 import ir.ac.kntu.model.classes.persons.*;
@@ -27,7 +28,6 @@ import javafx.scene.control.Button;
 import com.devskiller.jfairy.Fairy;
 import com.devskiller.jfairy.producer.person.Person;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +38,13 @@ import java.util.Random;
 
 public class Main extends Application {
     private static Stage stage;
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void changeScene(Pane newPane) {
+        stage.getScene().setRoot(newPane);
     }
 
     @Override
@@ -72,15 +77,11 @@ public class Main extends Application {
         stage.show();
     }
 
-    public void changeScene(Pane newPane) {
-        stage.getScene().setRoot(newPane);
-    }
-
     private void createFakeObject(Engine engine) throws IOException {
         createFakeAccounts(engine);
         createFakeObjectBig(engine);
         createFakeOrders(engine);
-        createFakeOrders(engine);
+        createFakeComments(engine);
     }
 
     private void createFakeAccounts(Engine engine) {
@@ -196,7 +197,7 @@ public class Main extends Application {
     }
 
     private void createFakeOrders(Engine engine) {
-        for (int i = 0; i < RandomHelper.getRandomInt(20,50); i++) {
+        for (int i = 0; i < RandomHelper.getRandomInt(30,80); i++) {
             User orderingUser = (User) engine.getAccountService().getListOfAccountByType(AccountType.USER).get(new Random().nextInt(engine.getAccountService().getListOfAccountByType(AccountType.USER).size()));
             Market orderingMarket = engine.getMarketService().getMarkets().get(new Random().nextInt(engine.getMarketService().getMarkets().size()));
             ArrayList<Product> orderingProducts = new ArrayList<>();
@@ -220,6 +221,24 @@ public class Main extends Application {
                 engine.getOrderService().addOrder(newFakeOrder);
             } catch (Exception e) {
                 i--;
+            }
+        }
+    }
+
+    private void createFakeComments(Engine engine) {
+        for (Order currentOrder : engine.getOrderService().getOrders()) {
+            if (new Random().nextBoolean()) {
+                currentOrder.updateStatus(null);
+                if (new Random().nextBoolean() && currentOrder.getMarket().getDeliveries().size() > 0) {
+                    currentOrder.updateStatus(currentOrder.getMarket().getDeliveries().get(new Random().nextInt(currentOrder.getMarket().getDeliveries().size())));
+                    if (new Random().nextBoolean()) {
+                        currentOrder.updateStatus(null);
+                        if (true) {
+                            Comment newFakeComment = new Comment(Fairy.create().textProducer().sentence(),RandomHelper.getRandomInt(0,12),currentOrder.getUser(),currentOrder.getMarket(),currentOrder.getProducts());
+                            currentOrder.addComment(newFakeComment);
+                        }
+                    }
+                }
             }
         }
     }
