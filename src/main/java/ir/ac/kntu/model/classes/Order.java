@@ -37,6 +37,10 @@ public class Order {
         updateStatus(null);
     }
 
+    /**
+     * this method calculate cost of order without delivery.
+     * @return a double for cost of order
+     */
     private Double calculateCost() {
         Double cost = 0.0;
         for (int i = 0; i < products.size(); i++) {
@@ -45,6 +49,14 @@ public class Order {
         return cost;
     }
 
+    /**
+     * this method get a new Comment,
+     * first set this comment to order comment,
+     * then add that to comment history for ordering user,
+     * and then add to comment history of ordering market,
+     * and finally add that to all products.
+     * @param comment get a Comment for adding
+     */
     public void addComment(Comment comment) {
         this.comment = comment;
         user.addComment(comment);
@@ -70,10 +82,6 @@ public class Order {
         this.delivery = delivery;
     }
 
-    public Delivery getDelivery() {
-        return delivery;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -82,6 +90,13 @@ public class Order {
         return user;
     }
 
+    /**
+     * this method update the status of the order.
+     * if status was processing updated to sending and this time set delivery time and delivery for order,
+     * if status was sending updated to delivered.
+     * @param selectedDelivery
+     * @return
+     */
     public String updateStatus(Delivery selectedDelivery) {
         try {
             if (status == null) {
@@ -102,7 +117,7 @@ public class Order {
         }
     }
 
-    private String returnProducts() {
+    private String returnProductsToString() {
         String result = "";
         for (int i = 0; i < products.size(); i++) {
             result += products.get(i).getName() + "(" + counter[i] + "), ";
@@ -118,7 +133,7 @@ public class Order {
     public String toString() {
         return  "Ordering user: " + user.getUsername() +
                 "| Market: " + market.getName() +
-                "| Products: " + returnProducts() +
+                "| Products: " + returnProductsToString() +
                 "| cost: " + cost +
                 "| status=" + status.toString().toLowerCase() +
                 (deliveryTime == null ? "" : ("|  Delivery time: " + deliveryTime.getKey())) +

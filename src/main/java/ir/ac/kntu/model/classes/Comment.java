@@ -35,10 +35,6 @@ public class Comment {
         return (ArrayList<Product>) products.clone();
     }
 
-    public String toStringComplete() {
-        return null;
-    }
-
     @Override
     public String toString() {
         return  "User: " + commentingUser.getUsername() +

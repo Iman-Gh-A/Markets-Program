@@ -29,6 +29,10 @@ public class Product {
 
     }
 
+    /**
+     * this method get a comment and add it to this product and then update rate.
+     * @param comment get a new Comment
+     */
     public void addComment(Comment comment) {
         comments.add(comment);
         commentsNum++;

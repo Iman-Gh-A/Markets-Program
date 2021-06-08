@@ -68,8 +68,8 @@ public class AccountService {
     /**
      * this method get a old user and edited user and new password,
      * then update old user whit edited data from edited user and new password.
-     * @param oldAccount changing this market's data
-     * @param editedAccount change data from this market
+     * @param oldAccount changing this user's data
+     * @param editedAccount change data from this user
      * @param newPassword this is new password if it is filled
      */
     public void updateUser(Account oldAccount,Account editedAccount,String newPassword) {
@@ -98,8 +98,8 @@ public class AccountService {
      * this method just for manager and admin
      * this method get a old account and edited account and new password,
      * then update old account whit edited data from edited account and new password.
-     * @param oldAccount changing this market's data
-     * @param editedAccount change data from this market
+     * @param oldAccount changing this account's data
+     * @param editedAccount change data from this account
      * @param newPassword this is new password if it is filled
      */
     public void updateManagerOrAdmin(Account oldAccount, Account editedAccount, String newPassword) {

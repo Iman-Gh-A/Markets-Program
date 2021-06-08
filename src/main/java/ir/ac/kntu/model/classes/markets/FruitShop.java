@@ -14,6 +14,10 @@ public class FruitShop extends ScheduleMarket{
         setSchedule(exportSchedule());
     }
 
+    /**
+     * this method export the schedule with start time and end time
+     * @return a list of schedule
+     */
     private ArrayList<Map.Entry<String,Integer>> exportSchedule() {
         HashMap<String,Integer> schedule = new HashMap<>();
         ArrayList<Map.Entry<String,Integer>> listOfSchedule = new ArrayList<>();

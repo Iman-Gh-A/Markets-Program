@@ -37,6 +37,10 @@ public class Market {
         deliveries = new ArrayList<>();
     }
 
+    /**
+     * this method get a comment and add it to this market and then update rate.
+     * @param comment get a new Comment
+     */
     public void addComment(Comment comment) {
         comments.add(comment);
         commentsNum++;
@@ -113,6 +117,11 @@ public class Market {
         this.schedule = schedule;
     }
 
+    /**
+     * this method get a String for product's name and return a list of product that contain that name.
+     * @param nameSearching get a String for name
+     * @return a list of product
+     */
     public ArrayList<Product> searchProductsByName(String nameSearching) {
         ArrayList<Product> productsContainName = new ArrayList<>();
         for (Product currentProduct : getProducts()) {
@@ -127,6 +136,10 @@ public class Market {
         return capacity;
     }
 
+    /**
+     * this method return a list of schedule time that was available for order
+     * @return a list of Map.Entry that contain a schedule time and number of that
+     */
     public ArrayList<Map.Entry<String, Integer>> getSchedule() {
         ArrayList<Map.Entry<String, Integer>> availableSchedule = new ArrayList<>();
         for (Map.Entry<String,Integer> current: schedule) {
@@ -149,6 +162,12 @@ public class Market {
         return (ArrayList<Delivery>) deliveries.clone();
     }
 
+    /**
+     * this method get a old delivery and edited delivery,
+     * then update old delivery whit edited data from edited delivery.
+     * @param oldDelivery changing this delivery's data
+     * @param editedDelivery change data from this delivery
+     */
     public void updateDelivery(Delivery oldDelivery, Delivery editedDelivery) {
         oldDelivery.setName(editedDelivery.getName());
         oldDelivery.setId(editedDelivery.getId());
