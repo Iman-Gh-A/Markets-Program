@@ -1,31 +1,11 @@
-# P3-FariFood-2
-[Documentation](https://docs.google.com/document/d/11255qriuOh6-U5rR2cD0ApwNPYnQP9kLILVVHIfbmdc/edit)
+# Markets Program
 
-<ul>
-<li>
-clone in your computer: 
+# Project Description
+<p> Iman Ghasemi Arani <br>
+    email: ( iman.ghasemiarani@email.kntu.ac.ir ) <br> <br>
+    Advanced Programming Final Project <br>
+    Instructors: Dr. Mehdi Esnaashari, Mehdi Zamanian <br>
+    K. N. Toosi University of Technology Spring 1400 <br>
+</p>
 
-```
-git clone your_repo_url
-cd your_repo_dir
-```
-</li>
-
-<li>
-run tests from terminal:
-
-```
-mvn clean test
-```
-</li>
-
-<li>
-push changes to the repository:
-
-```
-git add . 
-git commit -m "commit message"
-git push
-```
-</li>
-</ul>
+# JavaFx 11
